@@ -1,0 +1,45 @@
+{
+  "header": {
+    "callNow": "Llamar ahora",
+    "languageSwitch": "Idioma"
+  },
+  "hero": {
+    "title": "Jornada de Adultos Jóvenes MSK",
+    "subtitle": "Obtenga apoyo personalizado para su jornada de atención contra el cáncer. Nuestro asistente de IA puede ayudarle a navegar horarios, recursos y más.",
+    "watchVideo": "Ver video de introducción",
+    "openChat": "Iniciar Chat"
+  },
+  "chat": {
+    "disclaimer": "Este chat proporciona solo información. Para consejos médicos o emergencias, contacte a su equipo de atención o llame al 911.",
+    "typing": "El Asistente MSK está escribiendo...",
+    "inputPlaceholder": "Escriba su mensaje...",
+    "send": "Enviar",
+    "welcome": "Hola — bienvenido al Asistente MSK.\n\n¿No está seguro por dónde empezar? Está bien — podemos descubrirlo juntos. Puedo guiarle a través de exámenes, citas, costos o encontrar apoyo. Sin jerga médica, solo respuestas simples y pasos claros para que se sienta confiado sobre lo que viene después.\n\nY no se preocupe — no guardamos ni usamos ninguna información personal que comparta aquí.",
+    "chooseLanguage": "Por favor elija su idioma preferido para continuar:",
+    "languageConfirm": "¡Excelente! Le asistiré en {language}. ¿Cómo puedo ayudarle hoy?",
+    "quickIntents": {
+      "screening": "Detección y Diagnóstico",
+      "scheduling": "Citas",
+      "costs": "Costos y Seguro",
+      "aya": "Apoyo para Adultos Jóvenes",
+      "wayfinding": "Encontrar Ubicaciones",
+      "glossary": "Términos Médicos"
+    }
+  },
+  "actions": {
+    "callNow": "Llamar Ahora",
+    "schedule": "Programar en Línea",
+    "openResource": "Ver Recurso",
+    "source": "Fuente"
+  },
+  "safety": {
+    "piiDetected": "Para su privacidad, por favor no comparta información personal como números de teléfono o direcciones. Nuestro equipo puede ayudarle con esta información directamente.",
+    "callForHelp": "¿Necesita asistencia inmediata? Llámenos directamente."
+  },
+  "footer": {
+    "resources": "Recursos AYA",
+    "billing": "Facturación y Asistencia Financiera",
+    "locations": "Ubicaciones",
+    "privacy": "Política de Privacidad"
+  }
+}

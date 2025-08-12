@@ -1,0 +1,45 @@
+{
+  "header": {
+    "callNow": "Ligar agora",
+    "languageSwitch": "Idioma"
+  },
+  "hero": {
+    "title": "Jornada de Jovens Adultos MSK",
+    "subtitle": "Obtenha apoio personalizado para sua jornada de cuidados contra o câncer. Nosso assistente de IA pode ajudá-lo a navegar agendamentos, recursos e mais.",
+    "watchVideo": "Assistir vídeo de introdução",
+    "openChat": "Iniciar Chat"
+  },
+  "chat": {
+    "disclaimer": "Este chat fornece apenas informações. Para conselhos médicos ou emergências, entre em contato com sua equipe de cuidados ou ligue para 192.",
+    "typing": "Assistente MSK está digitando...",
+    "inputPlaceholder": "Digite sua mensagem...",
+    "send": "Enviar",
+    "welcome": "Olá — bem-vindo ao Assistente MSK.\n\nNão tem certeza por onde começar? Tudo bem — podemos descobrir juntos. Posso orientá-lo sobre exames, consultas, custos ou encontrar apoio. Sem jargão médico, apenas respostas simples e passos claros para que você se sinta confiante sobre o que vem a seguir.\n\nE não se preocupe — não guardamos nem usamos nenhuma informação pessoal que você compartilhar aqui.",
+    "chooseLanguage": "Escolha seu idioma preferido para continuar:",
+    "languageConfirm": "Ótimo! Vou ajudá-lo em {language}. Como posso ajudá-lo hoje?",
+    "quickIntents": {
+      "screening": "Rastreamento e Diagnóstico",
+      "scheduling": "Consultas",
+      "costs": "Custos e Seguro",
+      "aya": "Apoio para Jovens Adultos",
+      "wayfinding": "Encontrar Localizações",
+      "glossary": "Termos Médicos"
+    }
+  },
+  "actions": {
+    "callNow": "Ligar Agora",
+    "schedule": "Agendar Online",
+    "openResource": "Ver Recurso",
+    "source": "Fonte"
+  },
+  "safety": {
+    "piiDetected": "Para sua privacidade, por favor não compartilhe informações pessoais como números de telefone ou endereços. Nossa equipe pode ajudá-lo com essas informações diretamente.",
+    "callForHelp": "Precisa de ajuda imediata? Ligue para nós diretamente."
+  },
+  "footer": {
+    "resources": "Recursos AYA",
+    "billing": "Faturamento e Assistência Financeira",
+    "locations": "Localizações",
+    "privacy": "Política de Privacidade"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "header": {
+    "callNow": "Call now",
+    "languageSwitch": "Language"
+  },
+  "hero": {
+    "title": "MSK Young Adult Journey",
+    "subtitle": "Get personalized support for your cancer care journey. Our AI assistant can help you navigate scheduling, resources, and more.",
+    "watchVideo": "Watch introduction video",
+    "openChat": "Start Chat"
+  },
+  "chat": {
+    "disclaimer": "This chat provides information only. For medical advice or emergencies, contact your care team or call 911.",
+    "typing": "MSK Assistant is typing...",
+    "inputPlaceholder": "Type your message...",
+    "send": "Send",
+    "welcome": "Hi there — welcome to MSK Assistant.\n\nNot sure where to start? That's okay — we can figure it out together. I can walk you through screenings, appointments, costs, or finding support. No medical jargon, just simple answers and clear steps so you feel confident about what comes next.\n\nAnd don't worry — we don't keep or use any personal information you share here.",
+    "chooseLanguage": "Please choose your preferred language to continue:",
+    "languageConfirm": "Great! I'll assist you in {language}. How can I help you today?",
+    "quickIntents": {
+      "screening": "Screening & Diagnosis",
+      "scheduling": "Appointments",
+      "costs": "Costs & Insurance",
+      "aya": "Young Adult Support",
+      "wayfinding": "Find Locations",
+      "glossary": "Medical Terms"
+    }
+  },
+  "actions": {
+    "callNow": "Call Now",
+    "schedule": "Schedule Online",
+    "openResource": "View Resource",
+    "source": "Source"
+  },
+  "safety": {
+    "piiDetected": "For your privacy, please don't share personal information like phone numbers or addresses. Our team can help you with this information directly.",
+    "callForHelp": "Need immediate assistance? Call us directly."
+  },
+  "footer": {
+    "resources": "AYA Resources",
+    "billing": "Billing & Financial Assistance",
+    "locations": "Locations",
+    "privacy": "Privacy Policy"
+  }
+}

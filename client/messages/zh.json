@@ -1,0 +1,45 @@
+{
+  "header": {
+    "callNow": "立即致电",
+    "languageSwitch": "语言"
+  },
+  "hero": {
+    "title": "MSK 青年成人之旅",
+    "subtitle": "获得个性化的癌症护理旅程支持。我们的AI助手可以帮助您导航预约、资源等。",
+    "watchVideo": "观看介绍视频",
+    "openChat": "开始聊天"
+  },
+  "chat": {
+    "disclaimer": "此聊天仅提供信息。如需医疗建议或紧急情况，请联系您的护理团队或拨打911。",
+    "typing": "MSK助手正在输入...",
+    "inputPlaceholder": "输入您的消息...",
+    "send": "发送",
+    "welcome": "您好 — 欢迎使用MSK助手。\n\n不知道从哪里开始？没关系 — 我们可以一起弄清楚。我可以引导您了解筛查、预约、费用或寻找支持。没有医学术语，只有简单的答案和清晰的步骤，让您对接下来的事情充满信心。\n\n不用担心 — 我们不会保存或使用您在这里分享的任何个人信息。",
+    "chooseLanguage": "请选择您的首选语言以继续：",
+    "languageConfirm": "太好了！我将用{language}为您提供帮助。今天我能为您做些什么？",
+    "quickIntents": {
+      "screening": "筛查和诊断",
+      "scheduling": "预约",
+      "costs": "费用和保险",
+      "aya": "青年成人支持",
+      "wayfinding": "查找位置",
+      "glossary": "医学术语"
+    }
+  },
+  "actions": {
+    "callNow": "立即致电",
+    "schedule": "在线预约",
+    "openResource": "查看资源",
+    "source": "来源"
+  },
+  "safety": {
+    "piiDetected": "为了保护您的隐私，请不要分享电话号码或地址等个人信息。我们的团队可以直接为您提供这些信息的帮助。",
+    "callForHelp": "需要立即帮助？直接给我们打电话。"
+  },
+  "footer": {
+    "resources": "AYA资源",
+    "billing": "账单和财务援助",
+    "locations": "位置",
+    "privacy": "隐私政策"
+  }
+}

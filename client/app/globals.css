@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* MSK Theme Tokens */
+  --color-primary-600: #002569; /* MSK Navy */
+  --color-primary-700: #001E56;
+  --color-primary-500: #143983; /* hover */
+  --color-bg: #ffffff;
+  --color-bg-soft: #f9fafb;
+  --color-text: #0a0a0a;
+  --color-muted: #525252;
+  --color-border: #e5e7eb;
+  --radius-card: 1.25rem; /* rounded-2xl feel */
+  
+  /* shadcn/ui tokens */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 84% 4.9%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: Inter, sans-serif;
+}
+
+/* RTL Support */
+body.rtl {
+  direction: rtl;
+  font-family: 'Noto Naskh Arabic', serif;
+}
+
+/* Focus styles for accessibility */
+.focus\:ring-visible:focus-visible {
+  outline: 2px solid #002569;
+  outline-offset: 2px;
+}
+
+/* Professional focus rings */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid #002569;
+  outline-offset: 2px;
+  border-radius: 0.375rem;
+}
+
+/* High contrast focus for buttons */
+.btn-focus:focus-visible {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #002569;
+}
+
+/* Custom scrollbar for chat */
+.chat-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Smooth scrolling for virtuoso */
+.virtuoso-scroller {
+  scroll-behavior: smooth;
+}
+
+/* Professional button styles */
+.btn-primary {
+  background-color: var(--color-primary-600);
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-500);
+  transform: translateY(-1px);
+}
+
+/* Clean input focus styles */
+input:focus, textarea:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+}
+
+/* Sidebar animations */
+.sidebar-transition {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Message bubble animations */
+.message-enter {
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Safe area for mobile */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Professional card shadows */
+.card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Improved contrast for system messages */
+.system-message {
+  background-color: #FEF3C7;
+  border: 1px solid #F59E0B;
+  color: #92400E;
+}
+
+/* MSK Navy color utilities */
+.text-msk-navy {
+  color: #002569;
+}
+
+.bg-msk-navy {
+  background-color: #002569;
+}
+
+.border-msk-navy {
+  border-color: #002569;
+}
+
+.hover\:bg-msk-navy-light:hover {
+  background-color: #143983;
+}
+
+/* Animation utilities */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Typography improvements */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Ensure proper contrast */
+.btn-primary {
+  background-color: var(--color-primary-600);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-500);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-primary-600);
+  outline-offset: 2px;
+}
