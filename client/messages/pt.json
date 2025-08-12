@@ -21,7 +21,7 @@
       "screening": "Rastreamento e Diagnóstico",
       "scheduling": "Consultas",
       "costs": "Custos e Seguro",
-      "aya": "Apoio para Jovens Adultos",
+      "support": "Apoio ao Paciente",
       "wayfinding": "Encontrar Localizações",
       "glossary": "Termos Médicos"
     }
@@ -37,7 +37,7 @@
     "callForHelp": "Precisa de ajuda imediata? Ligue para nós diretamente."
   },
   "footer": {
-    "resources": "Recursos AYA",
+    "resources": "Recursos do Paciente",
     "billing": "Faturamento e Assistência Financeira",
     "locations": "Localizações",
     "privacy": "Política de Privacidade"

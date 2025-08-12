@@ -41,7 +41,7 @@ async def send_message(
     start_time = time.time()
     
     try:
-        logger.info(f"Processing message for session {chat_request.session_id} in {chat_request.language}")
+        logger.info(f"Processing message for session {chat_request.session_id} in language: '{chat_request.language}' - Message: '{chat_request.message[:50]}...'")
         
         # Ensure session exists
         if chat_request.session_id not in history_service.sessions:

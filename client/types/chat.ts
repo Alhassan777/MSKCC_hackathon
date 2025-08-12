@@ -30,7 +30,7 @@ export type IntentKey =
   | 'screening' 
   | 'scheduling' 
   | 'costs' 
-  | 'aya' 
+  | 'support' 
   | 'wayfinding' 
   | 'glossary' 
   | 'language_selection'

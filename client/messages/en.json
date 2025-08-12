@@ -4,7 +4,7 @@
     "languageSwitch": "Language"
   },
   "hero": {
-    "title": "MSK Young Adult Journey",
+    "title": "MSK Assistant",
     "subtitle": "Get personalized support for your cancer care journey. Our AI assistant can help you navigate scheduling, resources, and more.",
     "watchVideo": "Watch introduction video",
     "openChat": "Start Chat"
@@ -21,7 +21,7 @@
       "screening": "Screening & Diagnosis",
       "scheduling": "Appointments",
       "costs": "Costs & Insurance",
-      "aya": "Young Adult Support",
+      "support": "Patient Support",
       "wayfinding": "Find Locations",
       "glossary": "Medical Terms"
     }
@@ -37,7 +37,7 @@
     "callForHelp": "Need immediate assistance? Call us directly."
   },
   "footer": {
-    "resources": "AYA Resources",
+    "resources": "Patient Resources",
     "billing": "Billing & Financial Assistance",
     "locations": "Locations",
     "privacy": "Privacy Policy"

@@ -52,7 +52,7 @@ export function HeroCampaign({ onOpenChat }: HeroCampaignProps) {
                     {t('watchVideo')}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    Introduction to MSK Young Adult Services
+                    Introduction to MSK Services
                   </p>
                 </div>
               </div>

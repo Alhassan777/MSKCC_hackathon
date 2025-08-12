@@ -22,11 +22,12 @@ interface ChatSession {
 
 export function ChatInterface() {
   const t = useTranslations('chat');
-  const { sessionId, locale } = useSessionStore();
+  const sessionId = useSessionStore(state => state.sessionId);
+  const locale = useSessionStore(state => state.locale);
   const [messages, setMessages] = useState<ChatTurn[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showWelcomeCard, setShowWelcomeCard] = useState(true);
-  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLocale>('en');
+
   const [input, setInput] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
@@ -44,15 +45,19 @@ export function ChatInterface() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Initialize with browser locale
+  // Initialize with browser locale (only on first mount)
   useEffect(() => {
-    const browserLocale = navigator.language.split('-')[0] as SupportedLocale;
-    const supportedLocale = languageOptions.find(lang => lang.code === browserLocale)?.code || 'en';
-    setSelectedLanguage(supportedLocale);
-    if (supportedLocale !== locale) {
-      useSessionStore.getState().setLocale(supportedLocale);
+    const { locale: currentLocale } = useSessionStore.getState();
+    // Only set browser locale if the store is still at default 'en' (not user-selected)
+    if (currentLocale === 'en') {
+      const browserLocale = navigator.language.split('-')[0] as SupportedLocale;
+      const supportedLocale = languageOptions.find(lang => lang.code === browserLocale)?.code || 'en';
+      if (supportedLocale !== 'en') {
+        console.log('Setting initial browser locale:', supportedLocale);
+        useSessionStore.getState().setLocale(supportedLocale);
+      }
     }
-  }, [locale]);
+  }, []); // Empty dependency array - only run on mount
 
   // Initialize session
   useEffect(() => {
@@ -133,17 +138,28 @@ export function ChatInterface() {
   };
 
   const handleLanguageSelect = async (newLocale: SupportedLocale) => {
-    setSelectedLanguage(newLocale);
+    console.log('handleLanguageSelect called with:', newLocale, 'current locale:', locale);
+    
+    // Update the store first
     useSessionStore.getState().setLocale(newLocale);
+    
+    // Wait a bit for the persist middleware to complete
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    const storeState = useSessionStore.getState();
+    console.log('After setLocale with delay, store locale is:', storeState.locale);
+    console.log('Full store state:', storeState);
     
     const languageName = languageOptions.find(lang => lang.code === newLocale)?.nativeName || newLocale;
     showLanguageToast(languageName);
     
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/session/locale?session_id=${sessionId}&locale=${newLocale}`, {
+      // Update the backend session
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/session/locale?session_id=${sessionId}&locale=${newLocale}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
+      console.log('Backend session locale updated successfully');
     } catch (error) {
       console.error('Failed to set session locale:', error);
     }
@@ -191,7 +207,10 @@ export function ChatInterface() {
     setIsLoading(true);
     
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/chat/message`, {
+      const currentLocale = useSessionStore.getState().locale;
+      console.log('Sending quick intent with locale from store:', currentLocale);
+      
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/chat/message`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -199,7 +218,7 @@ export function ChatInterface() {
         body: JSON.stringify({
           session_id: sessionId,
           message: `Intent: ${intent}`,
-          language: selectedLanguage,
+          language: currentLocale,
           intent: intent,
         }),
       });
@@ -262,7 +281,16 @@ export function ChatInterface() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/chat/message`, {
+      // Get the current locale from the store directly to ensure we have the latest value
+      const currentLocale = useSessionStore.getState().locale;
+      console.log('Sending message with locale from state:', locale, 'from store:', currentLocale, 'sessionId:', sessionId);
+      console.log('Full request body:', JSON.stringify({
+        session_id: sessionId,
+        message: input.trim(),
+        language: currentLocale,
+      }));
+      
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/chat/message`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -270,7 +298,7 @@ export function ChatInterface() {
         body: JSON.stringify({
           session_id: sessionId,
           message: input.trim(),
-          language: selectedLanguage,
+          language: currentLocale,
         }),
       });
 
@@ -311,12 +339,12 @@ export function ChatInterface() {
     { key: 'screening' as IntentKey, label: 'Screening' },
     { key: 'scheduling' as IntentKey, label: 'Scheduling' },
     { key: 'costs' as IntentKey, label: 'Costs' },
-    { key: 'aya' as IntentKey, label: 'AYA Support' },
+    { key: 'support' as IntentKey, label: 'Patient Support' },
     { key: 'wayfinding' as IntentKey, label: 'Wayfinding' },
     { key: 'glossary' as IntentKey, label: 'Glossary' },
   ];
 
-  const currentLanguageName = languageOptions.find(lang => lang.code === selectedLanguage)?.nativeName || 'English';
+  const currentLanguageName = languageOptions.find(lang => lang.code === locale)?.nativeName || 'English';
 
   return (
     <div className="flex h-screen bg-[#F8FAFC]">
@@ -447,10 +475,10 @@ export function ChatInterface() {
                     {languageOptions.map((language) => (
                       <Button
                         key={language.code}
-                        variant={language.code === selectedLanguage ? 'default' : 'outline'}
+                        variant={language.code === locale ? 'default' : 'outline'}
                         size="sm"
                         onClick={() => handleWelcomeAction('language', language.code)}
-                        className={`${language.code === selectedLanguage ? 'bg-[#002569] text-white' : ''} focus:ring-2 focus:ring-[#002569] focus:ring-offset-2`}
+                        className={`${language.code === locale ? 'bg-[#002569] text-white' : ''} focus:ring-2 focus:ring-[#002569] focus:ring-offset-2`}
                       >
                         {language.nativeName}
                       </Button>

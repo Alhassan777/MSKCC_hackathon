@@ -8,9 +8,9 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
       {
         id: `msg_${Date.now()}_1`,
         role: 'assistant',
-        content: 'Cancer screening and early detection are crucial for young adults. MSK offers comprehensive screening programs tailored to your age and risk factors.',
+        content: 'Cancer screening and early detection are important for everyone. MSK offers comprehensive screening programs tailored to your risk factors.',
         citations: [
-          { title: 'Young Adult Cancer Screening Guide', url: 'https://mskcc.org/aya-screening' }
+          { title: 'Cancer Screening Guide', url: 'https://mskcc.org/screening' }
         ],
         actions: [
           { type: 'schedule', label: 'Schedule Screening', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' },
@@ -23,7 +23,7 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
       {
         id: `msg_${Date.now()}_2`,
         role: 'assistant',
-        content: 'You can schedule appointments online 24/7 or call our dedicated AYA scheduling line. We offer flexible scheduling to accommodate work and school.',
+        content: 'You can schedule appointments online 24/7 or call our scheduling line. We offer flexible scheduling to accommodate your needs.',
         citations: [
           { title: 'Online Appointment Scheduling', url: 'https://mskcc.org/appointments' }
         ],
@@ -38,7 +38,7 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
       {
         id: `msg_${Date.now()}_3`,
         role: 'assistant',
-        content: 'We understand cost concerns for young adults. MSK offers financial counseling, payment plans, and assistance programs. Insurance coverage varies by plan.',
+        content: 'We understand cost concerns for patients. MSK offers financial counseling, payment plans, and assistance programs. Insurance coverage varies by plan.',
         citations: [
           { title: 'Financial Assistance Programs', url: 'https://mskcc.org/insurance-assistance' }
         ],
@@ -49,17 +49,17 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
         timestamp: new Date(),
       }
     ],
-    aya: [
+    support: [
       {
         id: `msg_${Date.now()}_4`,
         role: 'assistant',
-        content: 'Our AYA Program provides specialized support for ages 18-39, including peer support groups, fertility counseling, and career/education guidance.',
+        content: 'MSK provides comprehensive patient support services, including support groups, counseling services, and resources for managing life during cancer care.',
         citations: [
-          { title: 'AYA Program Overview', url: 'https://mskcc.org/aya-program' }
+          { title: 'Patient Support Services', url: 'https://mskcc.org/patient-support' }
         ],
         actions: [
-          { type: 'resource', label: 'AYA Resources', href: 'https://mskcc.org/aya-program' },
-          { type: 'schedule', label: 'Meet AYA Team', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' }
+          { type: 'resource', label: 'Patient Resources', href: 'https://mskcc.org/patient-support' },
+          { type: 'schedule', label: 'Schedule Appointment', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' }
         ],
         timestamp: new Date(),
       }
@@ -83,9 +83,9 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
       {
         id: `msg_${Date.now()}_6`,
         role: 'assistant',
-        content: 'Medical terms can be confusing. Our online glossary explains cancer terminology in plain language, designed specifically for young adults.',
+        content: 'Medical terms can be confusing. Our online glossary explains cancer terminology in plain language.',
         citations: [
-          { title: 'Cancer Glossary for Young Adults', url: 'https://mskcc.org/glossary' }
+          { title: 'Cancer Glossary', url: 'https://mskcc.org/glossary' }
         ],
         actions: [
           { type: 'resource', label: 'Browse Glossary', href: 'https://mskcc.org/glossary' },
@@ -99,7 +99,7 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
       {
         id: `msg_${Date.now()}_7`,
         role: 'assistant',
-        content: 'I can help with information about MSK services, scheduling, costs, and young adult resources. For specific medical questions, please speak with your care team.',
+        content: 'I can help with information about MSK services, scheduling, costs, and patient resources. For specific medical questions, please speak with your care team.',
         actions: [
           { type: 'call', label: 'Call MSK', href: 'tel:+1-212-639-2000' },
           { type: 'schedule', label: 'Schedule Appointment', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' }
@@ -115,7 +115,7 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
         role: 'assistant',
         content: 'La detección temprana del cáncer es crucial para adultos jóvenes. MSK ofrece programas de detección integrales adaptados a su edad y factores de riesgo.',
         citations: [
-          { title: 'Guía de Detección de Cáncer para Adultos Jóvenes', url: 'https://mskcc.org/aya-screening' }
+          { title: 'Guía de Detección de Cáncer para Adultos Jóvenes', url: 'https://mskcc.org/screening' }
         ],
         actions: [
           { type: 'schedule', label: 'Programar Detección', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' },
@@ -128,7 +128,7 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
       {
         id: `msg_${Date.now()}_2`,
         role: 'assistant',
-        content: 'Puede programar citas en línea 24/7 o llamar a nuestra línea de programación AYA dedicada. Ofrecemos horarios flexibles para acomodar el trabajo y la escuela.',
+        content: 'Puede programar citas en línea 24/7 o llamar a nuestra línea de programación. Ofrecemos horarios flexibles para acomodar el sus necesidades.',
         citations: [
           { title: 'Programación de Citas en Línea', url: 'https://mskcc.org/appointments' }
         ],
@@ -154,17 +154,17 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
         timestamp: new Date(),
       }
     ],
-    aya: [
+    support: [
       {
         id: `msg_${Date.now()}_4`,
         role: 'assistant',
-        content: 'Nuestro Programa AYA brinda apoyo especializado para edades 18-39, incluyendo grupos de apoyo, asesoramiento de fertilidad y orientación profesional/educativa.',
+        content: 'MSK proporciona servicios integrales de apoyo al paciente, incluyendo grupos de apoyo, servicios de asesoramiento y recursos para manejar la vida durante el cuidado del cáncer.',
         citations: [
-          { title: 'Resumen del Programa AYA', url: 'https://mskcc.org/aya-program' }
+          { title: 'Servicios de Apoyo al Paciente', url: 'https://mskcc.org/patient-support' }
         ],
         actions: [
-          { type: 'resource', label: 'Recursos AYA', href: 'https://mskcc.org/aya-program' },
-          { type: 'schedule', label: 'Conocer Equipo AYA', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' }
+          { type: 'resource', label: 'Recursos AYA', href: 'https://mskcc.org/patient-support' },
+          { type: 'schedule', label: 'Programar Cita', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' }
         ],
         timestamp: new Date(),
       }
@@ -220,7 +220,7 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
         role: 'assistant',
         content: 'الكشف المبكر عن السرطان أمر بالغ الأهمية للبالغين الشباب. يقدم MSK برامج فحص شاملة مصممة خصيصاً لعمرك وعوامل الخطر لديك.',
         citations: [
-          { title: 'دليل فحص السرطان للبالغين الشباب', url: 'https://mskcc.org/aya-screening' }
+          { title: 'دليل فحص السرطان للبالغين الشباب', url: 'https://mskcc.org/screening' }
         ],
         actions: [
           { type: 'schedule', label: 'حجز موعد فحص', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' },
@@ -233,7 +233,7 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
       {
         id: `msg_${Date.now()}_2`,
         role: 'assistant',
-        content: 'يمكنك حجز المواعيد عبر الإنترنت على مدار الساعة طوال أيام الأسبوع أو الاتصال بخط حجز AYA المخصص. نقدم جدولة مرنة لاستيعاب العمل والدراسة.',
+        content: 'يمكنك حجز المواعيد عبر الإنترنت على مدار الساعة طوال أيام الأسبوع أو الاتصال بخط الحجز. نقدم جدولة مرنة لاستيعاب احتياجاتك.',
         citations: [
           { title: 'حجز المواعيد عبر الإنترنت', url: 'https://mskcc.org/appointments' }
         ],
@@ -259,17 +259,17 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
         timestamp: new Date(),
       }
     ],
-    aya: [
+    support: [
       {
         id: `msg_${Date.now()}_4`,
         role: 'assistant',
-        content: 'يوفر برنامج AYA دعماً متخصصاً للأعمار 18-39، بما في ذلك مجموعات الدعم والاستشارة حول الخصوبة والتوجيه المهني/التعليمي.',
+        content: 'يوفر MSK خدمات شاملة لدعم المرضى، بما في ذلك مجموعات الدعم وخدمات الاستشارة والموارد لإدارة الحياة أثناء رعاية السرطان.',
         citations: [
-          { title: 'نظرة عامة على برنامج AYA', url: 'https://mskcc.org/aya-program' }
+          { title: 'خدمات دعم المرضى', url: 'https://mskcc.org/patient-support' }
         ],
         actions: [
-          { type: 'resource', label: 'موارد AYA', href: 'https://mskcc.org/aya-program' },
-          { type: 'schedule', label: 'مقابلة فريق AYA', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' }
+          { type: 'resource', label: 'موارد AYA', href: 'https://mskcc.org/patient-support' },
+          { type: 'schedule', label: 'حجز موعد', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' }
         ],
         timestamp: new Date(),
       }
@@ -325,7 +325,7 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
         role: 'assistant',
         content: '癌症筛查和早期发现对年轻成人至关重要。MSK提供针对您的年龄和风险因素定制的综合筛查项目。',
         citations: [
-          { title: '年轻成人癌症筛查指南', url: 'https://mskcc.org/aya-screening' }
+          { title: '年轻成人癌症筛查指南', url: 'https://mskcc.org/screening' }
         ],
         actions: [
           { type: 'schedule', label: '预约筛查', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' },
@@ -338,7 +338,7 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
       {
         id: `msg_${Date.now()}_2`,
         role: 'assistant',
-        content: '您可以24/7在线预约或致电我们专门的AYA预约热线。我们提供灵活的时间安排以适应工作和学习。',
+        content: '您可以24/7在线预约或致电我们专门的预约热线。我们提供灵活的时间安排以适应您的需求。',
         citations: [
           { title: '在线预约', url: 'https://mskcc.org/appointments' }
         ],
@@ -364,17 +364,17 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
         timestamp: new Date(),
       }
     ],
-    aya: [
+    support: [
       {
         id: `msg_${Date.now()}_4`,
         role: 'assistant',
-        content: '我们的AYA项目为18-39岁人群提供专门支持，包括同伴支持小组、生育咨询和职业/教育指导。',
+        content: 'MSK提供全面的患者支持服务，包括支持小组、咨询服务和癌症护理期间管理生活的资源。',
         citations: [
-          { title: 'AYA项目概述', url: 'https://mskcc.org/aya-program' }
+          { title: '患者支持服务', url: 'https://mskcc.org/patient-support' }
         ],
         actions: [
-          { type: 'resource', label: 'AYA资源', href: 'https://mskcc.org/aya-program' },
-          { type: 'schedule', label: '会见AYA团队', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' }
+          { type: 'resource', label: 'AYA资源', href: 'https://mskcc.org/patient-support' },
+          { type: 'schedule', label: '预约挂号', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' }
         ],
         timestamp: new Date(),
       }
@@ -430,7 +430,7 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
         role: 'assistant',
         content: 'O rastreamento e detecção precoce do câncer são cruciais para jovens adultos. O MSK oferece programas de rastreamento abrangentes adaptados à sua idade e fatores de risco.',
         citations: [
-          { title: 'Guia de Rastreamento de Câncer para Jovens Adultos', url: 'https://mskcc.org/aya-screening' }
+          { title: 'Guia de Rastreamento de Câncer para Jovens Adultos', url: 'https://mskcc.org/screening' }
         ],
         actions: [
           { type: 'schedule', label: 'Agendar Rastreamento', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' },
@@ -443,7 +443,7 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
       {
         id: `msg_${Date.now()}_2`,
         role: 'assistant',
-        content: 'Você pode agendar consultas online 24/7 ou ligar para nossa linha de agendamento AYA dedicada. Oferecemos horários flexíveis para acomodar trabalho e estudos.',
+        content: 'Você pode agendar consultas online 24/7 ou ligar para nossa linha de agendamento. Oferecemos horários flexíveis para acomodar suas necessidades.',
         citations: [
           { title: 'Agendamento Online de Consultas', url: 'https://mskcc.org/appointments' }
         ],
@@ -469,17 +469,17 @@ const mockResponses: Record<SupportedLocale, Record<IntentKey, BotMessage[]>> = 
         timestamp: new Date(),
       }
     ],
-    aya: [
+    support: [
       {
         id: `msg_${Date.now()}_4`,
         role: 'assistant',
-        content: 'Nosso Programa AYA fornece apoio especializado para idades 18-39, incluindo grupos de apoio entre pares, aconselhamento sobre fertilidade e orientação profissional/educacional.',
+        content: 'O MSK oferece serviços abrangentes de apoio ao paciente, incluindo grupos de apoio, serviços de aconselhamento e recursos para gerenciar a vida durante o cuidado do câncer.',
         citations: [
-          { title: 'Visão Geral do Programa AYA', url: 'https://mskcc.org/aya-program' }
+          { title: 'Serviços de Apoio ao Paciente', url: 'https://mskcc.org/patient-support' }
         ],
         actions: [
-          { type: 'resource', label: 'Recursos AYA', href: 'https://mskcc.org/aya-program' },
-          { type: 'schedule', label: 'Conhecer Equipe AYA', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' }
+          { type: 'resource', label: 'Recursos AYA', href: 'https://mskcc.org/patient-support' },
+          { type: 'schedule', label: 'Agendar Consulta', href: process.env.NEXT_PUBLIC_BOOKING_URL || 'https://mskcc.org/appointments' }
         ],
         timestamp: new Date(),
       }
@@ -542,8 +542,8 @@ function determineIntent(text: string): IntentKey {
   if (lowerText.includes('cost') || lowerText.includes('insurance') || lowerText.includes('pay') || lowerText.includes('bill')) {
     return 'costs';
   }
-  if (lowerText.includes('young adult') || lowerText.includes('aya') || lowerText.includes('support')) {
-    return 'aya';
+  if (lowerText.includes('support') || lowerText.includes('help') || lowerText.includes('resources')) {
+    return 'support';
   }
   if (lowerText.includes('location') || lowerText.includes('address') || lowerText.includes('direction') || lowerText.includes('where')) {
     return 'wayfinding';

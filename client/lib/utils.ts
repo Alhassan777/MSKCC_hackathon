@@ -5,11 +5,28 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatTime(date: Date): string {
+export function formatTime(date: Date | string | null | undefined): string {
+  if (!date) return '';
+  
+  let dateObj: Date;
+  
+  if (date instanceof Date) {
+    dateObj = date;
+  } else if (typeof date === 'string') {
+    dateObj = new Date(date);
+  } else {
+    return '';
+  }
+  
+  // Check if the date is valid
+  if (isNaN(dateObj.getTime())) {
+    return '';
+  }
+  
   return new Intl.DateTimeFormat('en-US', {
     hour: '2-digit',
     minute: '2-digit',
-  }).format(date);
+  }).format(dateObj);
 }
 
 export function generateId(): string {

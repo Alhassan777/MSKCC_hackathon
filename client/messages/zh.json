@@ -21,7 +21,7 @@
       "screening": "筛查和诊断",
       "scheduling": "预约",
       "costs": "费用和保险",
-      "aya": "青年成人支持",
+      "support": "患者支持",
       "wayfinding": "查找位置",
       "glossary": "医学术语"
     }
@@ -37,7 +37,7 @@
     "callForHelp": "需要立即帮助？直接给我们打电话。"
   },
   "footer": {
-    "resources": "AYA资源",
+    "resources": "患者资源",
     "billing": "账单和财务援助",
     "locations": "位置",
     "privacy": "隐私政策"

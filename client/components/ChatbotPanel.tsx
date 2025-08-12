@@ -97,7 +97,7 @@ export function ChatbotPanel({ isOpen = true }: ChatbotPanelProps) {
       { key: 'screening' as IntentKey, label: t('quickIntents.screening') },
       { key: 'scheduling' as IntentKey, label: t('quickIntents.scheduling') },
       { key: 'costs' as IntentKey, label: t('quickIntents.costs') },
-      { key: 'aya' as IntentKey, label: t('quickIntents.aya') },
+      { key: 'support' as IntentKey, label: t('quickIntents.support') },
       { key: 'wayfinding' as IntentKey, label: t('quickIntents.wayfinding') },
       { key: 'glossary' as IntentKey, label: t('quickIntents.glossary') },
     ];

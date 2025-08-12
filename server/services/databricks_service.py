@@ -59,7 +59,7 @@ class DatabricksService:
                 "stream": False
             }
 
-            logger.info(f"Sending request to Databricks: {len(formatted_messages)} messages, language: {language}")
+            logger.info(f"Sending request to Databricks: {len(formatted_messages)} messages, language: '{language}' - Language instruction: '{self._get_language_instruction(language)[:50]}...'")
             
             response = await self.client.post(self.endpoint, json=payload)
             
@@ -95,10 +95,10 @@ class DatabricksService:
         formatted = []
         
         # Add system message with MSK context and language instruction
-        system_message = f"""You are MSK Assistant, a helpful AI assistant for Memorial Sloan Kettering Cancer Center's Young Adult Program.
+        system_message = f"""You are MSK Assistant, a helpful AI assistant for Memorial Sloan Kettering Cancer Center.
 
 Your role:
-- Provide information about MSK services, appointments, costs, and young adult cancer support
+- Provide information about MSK services, appointments, costs, and cancer care support
 - Be warm, supportive, and professional
 - Avoid medical advice - always refer to care teams for medical questions
 - Keep responses concise and actionable
@@ -118,10 +118,10 @@ MSK Services you can help with:
 - Cancer screening and early detection programs
 - Appointment scheduling and care coordination
 - Understanding costs, insurance, and financial assistance
-- Young Adult (AYA) program resources and support groups
+- Support groups and patient resources
 - Finding MSK locations and directions
 - Explaining medical terms in simple language
-- Connecting with specialized AYA services"""
+- Connecting with specialized care services"""
 
         formatted.append({
             "role": "system",
@@ -153,7 +153,17 @@ MSK Services you can help with:
     def _extract_content(self, data: Dict[str, Any]) -> str:
         """Extract content from various Databricks response formats"""
         # Try different possible response formats
-        if "content" in data and isinstance(data["content"], list) and len(data["content"]) > 0:
+        
+        # Handle OpenAI-style choices format (Databricks Claude endpoint)
+        if "choices" in data and isinstance(data["choices"], list) and len(data["choices"]) > 0:
+            choice = data["choices"][0]
+            if "message" in choice and "content" in choice["message"]:
+                return choice["message"]["content"]
+            elif "text" in choice:
+                return choice["text"]
+        
+        # Handle direct content formats
+        elif "content" in data and isinstance(data["content"], list) and len(data["content"]) > 0:
             return data["content"][0].get("text", "")
         elif "content" in data and isinstance(data["content"], str):
             return data["content"]
