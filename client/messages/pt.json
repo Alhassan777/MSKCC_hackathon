@@ -18,12 +18,15 @@
     "chooseLanguage": "Escolha seu idioma preferido para continuar:",
     "languageConfirm": "Ótimo! Vou ajudá-lo em {language}. Como posso ajudá-lo hoje?",
     "quickIntents": {
-      "screening": "Rastreamento e Diagnóstico",
-      "scheduling": "Consultas",
-      "costs": "Custos e Seguro",
-      "support": "Apoio ao Paciente",
-      "wayfinding": "Encontrar Localizações",
-      "glossary": "Termos Médicos"
+      "getting_started": "Começar",
+      "screening_prevention": "Triagem e Prevenção",
+      "scheduling_appointments": "Agendamento",
+      "financial_insurance": "Ajuda Financeira",
+      "supportive_care": "Serviços de Apoio",
+      "aya_caregiver": "AYA e Cuidadores",
+      "navigation_logistics": "Planejamento da Visita",
+      "glossary_education": "Educação e Termos",
+      "clinical_trials": "Ensaios Clínicos"
     }
   },
   "actions": {

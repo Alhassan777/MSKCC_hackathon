@@ -14,6 +14,8 @@ from contextlib import asynccontextmanager
 from routers import chat, session
 from services.databricks_service import DatabricksService
 from services.chat_history_service import ChatHistoryService
+from services.pii_detection_service import PIIDetectionService
+from services.tavily_search_service import TavilySearchService
 
 # Load environment variables
 load_dotenv()
@@ -28,11 +30,13 @@ logger = logging.getLogger(__name__)
 # Global services
 databricks_service = None
 chat_history_service = None
+pii_detection_service = None
+tavily_search_service = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup and shutdown events"""
-    global databricks_service, chat_history_service
+    global databricks_service, chat_history_service, pii_detection_service, tavily_search_service
     
     # Startup
     logger.info("🚀 Starting MSK Assistant Server")
@@ -41,16 +45,33 @@ async def lifespan(app: FastAPI):
     try:
         databricks_service = DatabricksService()
         chat_history_service = ChatHistoryService()
+        pii_detection_service = PIIDetectionService()
+        tavily_search_service = TavilySearchService()  # Optional service
         
-        # Health check Databricks connection
+        # Health check services
         health = await databricks_service.health_check()
         if health["status"] == "healthy":
             logger.info("✅ Databricks connection healthy")
         else:
             logger.warning(f"⚠️ Databricks connection issues: {health.get('error')}")
         
+        pii_health = await pii_detection_service.health_check()
+        if pii_health["status"] == "healthy":
+            logger.info("✅ PII detection service healthy")
+        else:
+            logger.warning(f"⚠️ PII detection service issues: {pii_health.get('error')}")
+        
+        # Check Tavily search service
+        if tavily_search_service and tavily_search_service.is_available():
+            logger.info("✅ Tavily search service available")
+        else:
+            logger.info("ℹ️ Tavily search service not available (API key not configured)")
+        
         logger.info(f"🌐 Environment: {os.getenv('ENVIRONMENT', 'development')}")
-        logger.info(f"🔗 Databricks endpoint configured")
+        services_list = ["Databricks", "PII Detection"]
+        if tavily_search_service and tavily_search_service.is_available():
+            services_list.append("Tavily Search")
+        logger.info(f"🔗 Services configured: {', '.join(services_list)}")
         
     except Exception as e:
         logger.error(f"❌ Failed to initialize services: {e}")
@@ -97,6 +118,11 @@ async def get_chat_history_service():
     if chat_history_service is None:
         raise HTTPException(status_code=503, detail="Chat history service not available")
     return chat_history_service
+
+async def get_pii_detection_service():
+    if pii_detection_service is None:
+        raise HTTPException(status_code=503, detail="PII detection service not available") 
+    return pii_detection_service
 
 # Health check endpoint
 @app.get("/health")

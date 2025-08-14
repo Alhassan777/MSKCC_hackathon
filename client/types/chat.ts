@@ -8,12 +8,30 @@ export type Citation = {
   url: string; 
 };
 
+export type SearchSource = {
+  title: string;
+  url: string;
+  snippet: string;
+  score?: number;
+};
+
+export interface PIIDetectionResult {
+  has_pii: boolean;
+  detected_types: string[];
+  redaction_notice?: string;
+  confidence: number;
+  original_length: number;
+  sanitized_length: number;
+}
+
 export type BotMessage = {
   id: string;
   role: 'assistant' | 'system';
   content: string;
   actions?: ActionButton[];
   citations?: Citation[];
+  search_sources?: SearchSource[];
+  pii_detection?: PIIDetectionResult;
   timestamp?: Date;
 };
 
@@ -27,12 +45,15 @@ export type UserMessage = {
 export type ChatTurn = BotMessage | UserMessage;
 
 export type IntentKey = 
-  | 'screening' 
-  | 'scheduling' 
-  | 'costs' 
-  | 'support' 
-  | 'wayfinding' 
-  | 'glossary' 
+  | 'getting_started' 
+  | 'screening_prevention' 
+  | 'scheduling_appointments' 
+  | 'financial_insurance' 
+  | 'supportive_care' 
+  | 'aya_caregiver' 
+  | 'navigation_logistics' 
+  | 'glossary_education' 
+  | 'clinical_trials'
   | 'language_selection'
   | 'unknown';
 

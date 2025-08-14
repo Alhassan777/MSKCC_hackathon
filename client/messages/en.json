@@ -18,12 +18,15 @@
     "chooseLanguage": "Please choose your preferred language to continue:",
     "languageConfirm": "Great! I'll assist you in {language}. How can I help you today?",
     "quickIntents": {
-      "screening": "Screening & Diagnosis",
-      "scheduling": "Appointments",
-      "costs": "Costs & Insurance",
-      "support": "Patient Support",
-      "wayfinding": "Find Locations",
-      "glossary": "Medical Terms"
+      "getting_started": "Getting Started",
+      "screening_prevention": "Screening & Prevention",
+      "scheduling_appointments": "Scheduling",
+      "financial_insurance": "Financial Help",
+      "supportive_care": "Support Services",
+      "aya_caregiver": "AYA & Caregivers",
+      "navigation_logistics": "Visit Planning",
+      "glossary_education": "Education & Terms",
+      "clinical_trials": "Clinical Trials"
     }
   },
   "actions": {

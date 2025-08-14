@@ -10,10 +10,14 @@ from models.chat_models import (
     ChatHistoryRequest, 
     ChatHistoryResponse,
     ActionButton,
-    Citation
+    Citation,
+    SearchSource,
+    PIIDetectionResult
 )
 from services.databricks_service import DatabricksService
 from services.chat_history_service import ChatHistoryService
+from services.pii_detection_service import PIIDetectionService
+from services.tavily_search_service import TavilySearchService
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -31,17 +35,43 @@ async def get_chat_history_service() -> ChatHistoryService:
         raise HTTPException(status_code=503, detail="Chat history service not available")
     return chat_history_service
 
+async def get_pii_detection_service() -> PIIDetectionService:
+    from main import pii_detection_service
+    if pii_detection_service is None:
+        raise HTTPException(status_code=503, detail="PII detection service not available")
+    return pii_detection_service
+
+async def get_tavily_search_service() -> TavilySearchService:
+    from main import tavily_search_service
+    # Note: Tavily is optional, so we don't raise an error if it's not available
+    return tavily_search_service
+
 @router.post("/message", response_model=ChatResponse)
 async def send_message(
     chat_request: ChatRequest,
     databricks_service: DatabricksService = Depends(get_databricks_service),
-    history_service: ChatHistoryService = Depends(get_chat_history_service)
+    history_service: ChatHistoryService = Depends(get_chat_history_service),
+    pii_service: PIIDetectionService = Depends(get_pii_detection_service),
+    search_service: TavilySearchService = Depends(get_tavily_search_service)
 ):
     """Send a message to the MSK Assistant"""
     start_time = time.time()
     
     try:
         logger.info(f"Processing message for session {chat_request.session_id} in language: '{chat_request.language}' - Message: '{chat_request.message[:50]}...'")
+        
+        # STEP 1: PII DETECTION & SANITIZATION
+        logger.info(f"Step 1: Starting PII detection for session {chat_request.session_id}")
+        pii_result = await pii_service.detect_and_sanitize_pii(chat_request.message, chat_request.language)
+        
+        # Use sanitized message for processing
+        processed_message = pii_result["sanitized_text"]
+        
+        if pii_result["has_pii"]:
+            logger.warning(f"PII detected in session {chat_request.session_id}: {pii_result['detected_types']}")
+            logger.info(f"Original message length: {pii_result['original_length']}, Sanitized: {pii_result['sanitized_length']}")
+        else:
+            logger.info(f"No PII detected in session {chat_request.session_id}")
         
         # Ensure session exists
         if chat_request.session_id not in history_service.sessions:
@@ -50,21 +80,66 @@ async def send_message(
         # Set session language
         history_service.set_session_locale(chat_request.session_id, chat_request.language)
         
-        # Add user message to history
-        history_service.add_message(chat_request.session_id, "user", chat_request.message)
+        # CRITICAL: Only store sanitized message in history (HIPAA compliance)
+        history_service.add_message(chat_request.session_id, "user", processed_message)
         
-        # Get conversation context
+        # Get conversation context (all messages are already sanitized)
         context_messages = history_service.get_context_for_llm(chat_request.session_id)
         
-        # Send to Databricks/Claude
+        # STEP 2: WEB SEARCH (if needed and available)
+        search_context = ""
+        search_sources = []
+        if search_service and search_service.is_available():
+            # Use LLM to determine if search is needed
+            should_search = await search_service.should_trigger_search(processed_message, databricks_service)
+            if should_search:
+                logger.info(f"Step 2a: LLM determined search is needed for session {chat_request.session_id}")
+                search_results = await search_service.search(processed_message, databricks_service)
+                if search_results:
+                    search_context = search_service.format_search_results_for_context(search_results)
+                    # Convert search results to SearchSource objects for the frontend
+                    search_sources = [
+                        SearchSource(
+                            title=result.title,
+                            url=result.url,
+                            snippet=result.content[:200] + "..." if len(result.content) > 200 else result.content,
+                            score=result.score
+                        )
+                        for result in search_results[:5]  # Limit to top 5 sources
+                    ]
+                    logger.info(f"Found {len(search_results)} search results to include in context")
+                else:
+                    logger.info(f"Search was triggered but no results found for session {chat_request.session_id}")
+            else:
+                logger.info(f"LLM determined no search needed for session {chat_request.session_id}")
+        
+        # STEP 3: MAIN PROCESSING with sanitized content and search context
+        logger.info(f"Step 3: Sending sanitized message to LLM for session {chat_request.session_id}")
+        
+        # Enhance context with search results if available
+        enhanced_context = context_messages
+        if search_context:
+            # Add search context as a system message
+            enhanced_context = context_messages + [{
+                "role": "system",
+                "content": f"Additional current information from web search:\n{search_context}\n\nPlease use this information to provide more current and accurate responses when relevant."
+            }]
+        
         llm_response = await databricks_service.send_message(
-            messages=context_messages,
+            messages=enhanced_context,
             language=chat_request.language,
             max_tokens=1000,
             temperature=0.7
         )
         
         assistant_message = llm_response["content"]
+        
+        # STEP 4: FINAL RESPONSE FORMATTING with PII notice
+        if pii_result["has_pii"] and pii_result["redaction_notice"]:
+            # Prepend PII redaction notice to response
+            pii_notice = pii_result["redaction_notice"]
+            assistant_message = f"{pii_notice}\n\n{assistant_message}"
+            logger.info(f"Added PII redaction notice to response for session {chat_request.session_id}")
         
         # Add assistant response to history
         history_service.add_message(chat_request.session_id, "assistant", assistant_message)
@@ -75,13 +150,27 @@ async def send_message(
         # Calculate processing time
         processing_time = int((time.time() - start_time) * 1000)
         
+        # Create PII detection result for response
+        pii_detection_result = None
+        if pii_result["has_pii"]:
+            pii_detection_result = PIIDetectionResult(
+                has_pii=pii_result["has_pii"],
+                detected_types=pii_result["detected_types"],
+                redaction_notice=pii_result["redaction_notice"],
+                confidence=pii_result["confidence"],
+                original_length=pii_result["original_length"],
+                sanitized_length=pii_result["sanitized_length"]
+            )
+        
         response = ChatResponse(
             session_id=chat_request.session_id,
             message=assistant_message,
             language=chat_request.language,
             actions=actions,
             citations=citations,
-            intent=_classify_intent(chat_request.message),
+            search_sources=search_sources if search_sources else None,
+            intent=_classify_intent(processed_message),  # Use sanitized message for intent classification
+            pii_detection=pii_detection_result,
             timestamp=datetime.utcnow(),
             processing_time_ms=processing_time
         )
@@ -243,18 +332,38 @@ def _classify_intent(message: str) -> str:
     """Basic intent classification"""
     message_lower = message.lower()
     
-    if any(word in message_lower for word in ["screen", "test", "check", "exam"]):
-        return "screening"
-    elif any(word in message_lower for word in ["appointment", "schedule", "book"]):
-        return "scheduling"
-    elif any(word in message_lower for word in ["cost", "price", "insurance", "pay"]):
-        return "costs"
-    elif any(word in message_lower for word in ["support", "help", "group"]):
-        return "aya"
-    elif any(word in message_lower for word in ["location", "address", "direction", "where"]):
-        return "wayfinding"
-    elif any(word in message_lower for word in ["meaning", "definition", "explain"]):
-        return "glossary"
+    # Check for symptoms or disease questions (prioritize these for proper handling)
+    if any(word in message_lower for word in ["symptoms", "pain", "headache", "fatigue", "nausea", "fever", "swelling", "lump", "bleeding", "shortness of breath", "weight loss"]):
+        return "screening_prevention"  # Route to screening for proper medical guidance
+    elif any(word in message_lower for word in ["cancer", "tumor", "oncology", "chemotherapy", "radiation", "breast cancer", "lung cancer", "prostate cancer", "leukemia", "lymphoma"]):
+        return "glossary_education"  # Route to education for disease information
+    # Check for getting started intent
+    elif any(word in message_lower for word in ["get started", "how do i", "begin", "start", "first", "new patient"]):
+        return "getting_started"
+    # Check for screening and prevention
+    elif any(word in message_lower for word in ["screen", "test", "check", "exam", "prevention", "risk"]):
+        return "screening_prevention"
+    # Check for scheduling and appointments
+    elif any(word in message_lower for word in ["appointment", "schedule", "book", "reschedule", "prepare"]):
+        return "scheduling_appointments"
+    # Check for financial and insurance
+    elif any(word in message_lower for word in ["cost", "price", "insurance", "pay", "financial", "assistance", "billing"]):
+        return "financial_insurance"
+    # Check for supportive care
+    elif any(word in message_lower for word in ["support", "counseling", "spiritual", "integrative"]):
+        return "supportive_care"
+    # Check for AYA and caregiver
+    elif any(word in message_lower for word in ["young adult", "aya", "caregiver", "peer", "group"]):
+        return "aya_caregiver"
+    # Check for navigation and logistics
+    elif any(word in message_lower for word in ["location", "address", "direction", "where", "parking", "transit", "visit"]):
+        return "navigation_logistics"
+    # Check for glossary and education
+    elif any(word in message_lower for word in ["meaning", "definition", "explain", "learn", "education", "term"]):
+        return "glossary_education"
+    # Check for clinical trials
+    elif any(word in message_lower for word in ["trial", "study", "research", "clinical", "experiment"]):
+        return "clinical_trials"
     else:
         return "unknown"
 

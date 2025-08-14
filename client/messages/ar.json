@@ -18,12 +18,15 @@
     "chooseLanguage": "يرجى اختيار لغتك المفضلة للمتابعة:",
     "languageConfirm": "رائع! سأساعدك باللغة {language}. كيف يمكنني مساعدتك اليوم؟",
     "quickIntents": {
-      "screening": "الفحص والتشخيص",
-      "scheduling": "المواعيد",
-      "costs": "التكاليف والتأمين",
-      "support": "دعم المرضى",
-      "wayfinding": "البحث عن المواقع",
-      "glossary": "المصطلحات الطبية"
+      "getting_started": "البدء",
+      "screening_prevention": "الفحص والوقاية",
+      "scheduling_appointments": "حجز المواعيد",
+      "financial_insurance": "المساعدة المالية",
+      "supportive_care": "خدمات الدعم",
+      "aya_caregiver": "المراهقين والمقدمين",
+      "navigation_logistics": "تخطيط الزيارة",
+      "glossary_education": "التعليم والمصطلحات",
+      "clinical_trials": "التجارب السريرية"
     }
   },
   "actions": {

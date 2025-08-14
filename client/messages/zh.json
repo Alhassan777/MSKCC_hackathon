@@ -18,12 +18,15 @@
     "chooseLanguage": "请选择您的首选语言以继续：",
     "languageConfirm": "太好了！我将用{language}为您提供帮助。今天我能为您做些什么？",
     "quickIntents": {
-      "screening": "筛查和诊断",
-      "scheduling": "预约",
-      "costs": "费用和保险",
-      "support": "患者支持",
-      "wayfinding": "查找位置",
-      "glossary": "医学术语"
+      "getting_started": "开始",
+      "screening_prevention": "筛查与预防",
+      "scheduling_appointments": "预约安排",
+      "financial_insurance": "经济援助",
+      "supportive_care": "支持服务",
+      "aya_caregiver": "青少年与护理者",
+      "navigation_logistics": "就诊规划",
+      "glossary_education": "教育与术语",
+      "clinical_trials": "临床试验"
     }
   },
   "actions": {

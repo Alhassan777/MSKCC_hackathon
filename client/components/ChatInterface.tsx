@@ -7,6 +7,7 @@ import { Send, Menu, Plus, MessageSquare, Globe, Phone, Info, X } from 'lucide-r
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MessageBubble } from '@/components/MessageBubble';
+import { Tooltip } from '@/components/ui/tooltip';
 import { useSessionStore } from '@/lib/store/session';
 import { generateId, formatTime } from '@/lib/utils';
 import { ChatTurn, UserMessage, BotMessage, IntentKey, SupportedLocale } from '@/types/chat';
@@ -53,7 +54,6 @@ export function ChatInterface() {
       const browserLocale = navigator.language.split('-')[0] as SupportedLocale;
       const supportedLocale = languageOptions.find(lang => lang.code === browserLocale)?.code || 'en';
       if (supportedLocale !== 'en') {
-        console.log('Setting initial browser locale:', supportedLocale);
         useSessionStore.getState().setLocale(supportedLocale);
       }
     }
@@ -138,17 +138,11 @@ export function ChatInterface() {
   };
 
   const handleLanguageSelect = async (newLocale: SupportedLocale) => {
-    console.log('handleLanguageSelect called with:', newLocale, 'current locale:', locale);
-    
     // Update the store first
     useSessionStore.getState().setLocale(newLocale);
     
     // Wait a bit for the persist middleware to complete
     await new Promise(resolve => setTimeout(resolve, 100));
-    
-    const storeState = useSessionStore.getState();
-    console.log('After setLocale with delay, store locale is:', storeState.locale);
-    console.log('Full store state:', storeState);
     
     const languageName = languageOptions.find(lang => lang.code === newLocale)?.nativeName || newLocale;
     showLanguageToast(languageName);
@@ -159,7 +153,6 @@ export function ChatInterface() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
-      console.log('Backend session locale updated successfully');
     } catch (error) {
       console.error('Failed to set session locale:', error);
     }
@@ -203,12 +196,21 @@ export function ChatInterface() {
     return welcomeMessages[locale] || welcomeMessages.en;
   };
 
-  const handleQuickIntent = async (intent: IntentKey) => {
+  const handleQuickIntent = async (intent: IntentKey, prompt: string) => {
     setIsLoading(true);
+    
+    // Add user message to show the prompt that was sent
+    const userMessage: UserMessage = {
+      id: generateId(),
+      role: 'user',
+      content: prompt,
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, userMessage]);
     
     try {
       const currentLocale = useSessionStore.getState().locale;
-      console.log('Sending quick intent with locale from store:', currentLocale);
+
       
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/chat/message`, {
         method: 'POST',
@@ -217,7 +219,7 @@ export function ChatInterface() {
         },
         body: JSON.stringify({
           session_id: sessionId,
-          message: `Intent: ${intent}`,
+          message: prompt,
           language: currentLocale,
           intent: intent,
         }),
@@ -236,6 +238,8 @@ export function ChatInterface() {
           timestamp: new Date(),
           actions: data.actions || [],
           citations: data.citations || [],
+          search_sources: data.search_sources || [],
+          pii_detection: data.pii_detection || undefined,
         };
         setMessages(prev => [...prev, assistantMessage]);
       }
@@ -283,12 +287,6 @@ export function ChatInterface() {
     try {
       // Get the current locale from the store directly to ensure we have the latest value
       const currentLocale = useSessionStore.getState().locale;
-      console.log('Sending message with locale from state:', locale, 'from store:', currentLocale, 'sessionId:', sessionId);
-      console.log('Full request body:', JSON.stringify({
-        session_id: sessionId,
-        message: input.trim(),
-        language: currentLocale,
-      }));
       
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/chat/message`, {
         method: 'POST',
@@ -315,6 +313,8 @@ export function ChatInterface() {
           timestamp: new Date(),
           actions: data.actions || [],
           citations: data.citations || [],
+          search_sources: data.search_sources || [],
+          pii_detection: data.pii_detection || undefined,
         };
         setMessages(prev => [...prev, assistantMessage]);
       }
@@ -336,12 +336,60 @@ export function ChatInterface() {
   };
 
   const quickIntents = [
-    { key: 'screening' as IntentKey, label: 'Screening' },
-    { key: 'scheduling' as IntentKey, label: 'Scheduling' },
-    { key: 'costs' as IntentKey, label: 'Costs' },
-    { key: 'support' as IntentKey, label: 'Patient Support' },
-    { key: 'wayfinding' as IntentKey, label: 'Wayfinding' },
-    { key: 'glossary' as IntentKey, label: 'Glossary' },
+    { 
+      key: 'getting_started' as IntentKey, 
+      label: 'Getting Started', 
+      prompt: 'I\'m new to MSK and need to understand how to become a patient. Please explain the process for becoming an MSK patient, including eligibility requirements, how to get referrals, risk assessment options, and what makes MSK different from other cancer centers. I also want to know about MSK\'s "Why Choose MSK" advantages and any initial screening or consultation steps.',
+      description: 'Complete guide to becoming an MSK patient - eligibility, referrals, risk assessment, and what sets MSK apart'
+    },
+    { 
+      key: 'screening_prevention' as IntentKey, 
+      label: 'Cancer Screening', 
+      prompt: 'I want to learn about cancer screening and prevention at MSK. Please provide detailed information about MSK\'s screening programs, what types of cancer screenings are available, who qualifies for different screening tests, what to expect during the screening process, risk assessment tools, and MSK\'s approach to cancer prevention. Include information about early detection programs and how MSK\'s screening differs from routine check-ups.',
+      description: 'MSK\'s comprehensive cancer screening programs, eligibility, prevention strategies, and early detection'
+    },
+    { 
+      key: 'scheduling_appointments' as IntentKey, 
+      label: 'Appointments', 
+      prompt: 'I need help with scheduling at MSK. Please explain all the ways to book appointments (online, phone, through referrals), wait times for new patients, how MSK\'s Care Advisors work (available 24/7), how to reschedule or cancel appointments, coordinating multiple appointments in one visit, and tips for preparing for my first appointment. Include information about MSK\'s concierge support services.',
+      description: 'Complete appointment scheduling guide - booking methods, wait times, Care Advisors, and preparation tips'
+    },
+    { 
+      key: 'financial_insurance' as IntentKey, 
+      label: 'Insurance & Costs', 
+      prompt: 'I need comprehensive information about costs and financial assistance at MSK. Please explain MSK\'s Financial Assistance Program, how to get cost estimates for treatments and consultations, what insurance plans MSK accepts, how billing works, options for financial assistance and payment plans, and how to request cost estimates before treatment. Include plain-language explanations of insurance coverage for cancer care.',
+      description: 'MSK\'s Financial Assistance Program, insurance coverage, cost estimates, and payment options'
+    },
+    { 
+      key: 'supportive_care' as IntentKey, 
+      label: 'Support Services', 
+      prompt: 'I want to know about MSK\'s supportive and holistic care services. Please provide details about emotional and mental health support, counseling services, spiritual care, symptom management and palliative care, MSK\'s Integrative Medicine services (including yoga, music therapy, acupuncture), nutrition and wellness programs, social work services, and family assistance programs. Explain how these services work together with medical treatment.',
+      description: 'MSK\'s comprehensive support services - counseling, spiritual care, integrative medicine, and wellness programs'
+    },
+    { 
+      key: 'aya_caregiver' as IntentKey, 
+      label: 'Young Adults & Caregivers', 
+      prompt: 'I need information about MSK\'s programs for young adults and caregivers. Please explain MSK\'s AYA (Adolescent and Young Adult) program, resources specifically designed for young adults with cancer, caregiver support services, caregiver counseling programs, peer support groups, RLAC (Resource Link for Adolescents and Young Adults with Cancer), bereavement support, and how MSK addresses the unique needs of young adults facing cancer.',
+      description: 'MSK\'s specialized AYA program, caregiver support, peer groups, and resources for young adults with cancer'
+    },
+    { 
+      key: 'navigation_logistics' as IntentKey, 
+      label: 'Visit Planning', 
+      prompt: 'I need help planning my visit to MSK locations. Please provide comprehensive information about getting to MSK facilities, parking options and costs, shuttle services, public transportation access, visitor guidelines and hours, lodging recommendations for out-of-town patients, on-site amenities (cafeteria, pharmacy, gift shop), accessibility services, and tips for navigating MSK campuses. Include information about planning your visit and what to expect.',
+      description: 'Complete MSK visit planning - directions, parking, transit, lodging, visitor policies, and campus amenities'
+    },
+    { 
+      key: 'glossary_education' as IntentKey, 
+      label: 'Education & Learning', 
+      prompt: 'I want to access MSK\'s educational resources and learn about medical terminology. Please provide information about MSK\'s Patient & Community Education Library, glossary of medical terms explained in plain language, cancer types and treatment terminology, MSK\'s "Cancer Straight Talk" podcast, "Cooking with Karla" videos, educational videos and guides, acronyms and abbreviations used at MSK, and other learning resources available to patients and families.',
+      description: 'MSK\'s education library, medical glossary, Cancer Straight Talk podcast, and learning resources'
+    },
+    { 
+      key: 'clinical_trials' as IntentKey, 
+      label: 'Clinical Trials', 
+      prompt: 'I\'m interested in MSK\'s clinical trials and research opportunities. Please explain how clinical trial enrollment works at MSK, what types of trials are available for adult and pediatric cancers, how to find trials that might be appropriate for my situation, MSK\'s leading-edge research studies, the benefits and considerations of participating in clinical trials, and how MSK\'s research contributes to advancing cancer treatment. Include information about MSK\'s hundreds of active clinical trials.',
+      description: 'MSK\'s clinical trials program - enrollment process, available studies, and cutting-edge cancer research'
+    },
   ];
 
   const currentLanguageName = languageOptions.find(lang => lang.code === locale)?.nativeName || 'English';
@@ -546,15 +594,21 @@ export function ChatInterface() {
                 <div className="px-6 py-2 border-t border-gray-100">
                   <div className="flex flex-wrap gap-2">
                     {quickIntents.map((intent) => (
-                      <Button
+                      <Tooltip
                         key={intent.key}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleQuickIntent(intent.key)}
-                        className="text-xs border-gray-300 hover:border-[#002569] hover:text-[#002569] focus:ring-2 focus:ring-[#002569] focus:ring-offset-2"
+                        content={intent.description}
+                        side="top"
+                        delayMs={500}
                       >
-                        {intent.label}
-                      </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleQuickIntent(intent.key, intent.prompt)}
+                          className="text-xs border-gray-300 hover:border-[#002569] hover:text-[#002569] focus:ring-2 focus:ring-[#002569] focus:ring-offset-2 transition-all duration-200"
+                        >
+                          {intent.label}
+                        </Button>
+                      </Tooltip>
                     ))}
                   </div>
                 </div>

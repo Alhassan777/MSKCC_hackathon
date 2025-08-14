@@ -19,6 +19,13 @@ class Citation(BaseModel):
     title: str
     url: str
 
+class SearchSource(BaseModel):
+    """Source from web search results"""
+    title: str
+    url: str
+    snippet: str
+    score: Optional[float] = None
+
 class ChatRequest(BaseModel):
     """Request to send a chat message"""
     session_id: str = Field(..., description="Session identifier")
@@ -27,6 +34,15 @@ class ChatRequest(BaseModel):
     intent: Optional[str] = Field(None, description="Intent classification")
     context: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional context")
 
+class PIIDetectionResult(BaseModel):
+    """Result from PII detection"""
+    has_pii: bool
+    detected_types: List[str]
+    redaction_notice: Optional[str] = None
+    confidence: float = 0.0
+    original_length: int
+    sanitized_length: int
+
 class ChatResponse(BaseModel):
     """Response from chat endpoint"""
     session_id: str
@@ -34,7 +50,9 @@ class ChatResponse(BaseModel):
     language: str
     actions: Optional[List[ActionButton]] = None
     citations: Optional[List[Citation]] = None
+    search_sources: Optional[List[SearchSource]] = None
     intent: Optional[str] = None
+    pii_detection: Optional[PIIDetectionResult] = None
     timestamp: datetime
     processing_time_ms: int
 

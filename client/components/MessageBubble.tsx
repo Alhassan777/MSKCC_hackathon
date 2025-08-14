@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
 import { Button } from '@/components/ui/button';
 import { formatTime } from '@/lib/utils';
-import { ChatTurn, ActionButton } from '@/types/chat';
+import { ChatTurn, ActionButton, PIIDetectionResult, SearchSource } from '@/types/chat';
 
 interface MessageBubbleProps {
   message: ChatTurn;
@@ -15,6 +15,27 @@ interface MessageBubbleProps {
 
 export function MessageBubble({ message, showTimestamp = false }: MessageBubbleProps) {
   const t = useTranslations('actions');
+
+  const renderPIINotice = (piiDetection: PIIDetectionResult) => {
+    if (!piiDetection.has_pii || !piiDetection.redaction_notice) return null;
+
+    return (
+      <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <div className="flex items-start gap-2">
+          <div className="flex-shrink-0 w-5 h-5 mt-0.5">
+            <svg className="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="text-sm text-yellow-800 font-medium mb-1">Privacy Protection Notice</p>
+            <p className="text-sm text-yellow-700">{piiDetection.redaction_notice}</p>
+            <p className="text-xs text-yellow-600 mt-1">Your privacy is protected - no personal information is stored.</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderActionButtons = (actions: ActionButton[]) => {
     return (
@@ -59,6 +80,52 @@ export function MessageBubble({ message, showTimestamp = false }: MessageBubbleP
             </Button>
           );
         })}
+      </div>
+    );
+  };
+
+  const renderSearchSources = () => {
+    if (message.role === 'user' || !('search_sources' in message) || !message.search_sources?.length) {
+      return null;
+    }
+
+    return (
+      <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-4 h-4 text-blue-600">
+            <svg fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <span className="text-sm font-medium text-blue-800">Sources from web search:</span>
+        </div>
+        <div className="space-y-2">
+          {message.search_sources.map((source, index) => (
+            <div key={index} className="bg-white p-2 rounded border border-blue-100">
+              <a
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block hover:bg-blue-25 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded transition-colors"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-blue-900 hover:text-blue-700 line-clamp-1">
+                      {source.title}
+                    </div>
+                    <div className="text-xs text-gray-600 mt-1 line-clamp-2">
+                      {source.snippet}
+                    </div>
+                    <div className="text-xs text-blue-600 mt-1 truncate">
+                      {new URL(source.url).hostname}
+                    </div>
+                  </div>
+                  <ExternalLink className="h-3 w-3 text-blue-500 flex-shrink-0 mt-1" />
+                </div>
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
     );
   };
@@ -122,12 +189,19 @@ export function MessageBubble({ message, showTimestamp = false }: MessageBubbleP
             : 'bg-[#002569]/5 text-gray-900'
         }`}>
           <div className="text-sm space-y-3 leading-relaxed">
+            {/* PII Detection Notice */}
+            {message.role === 'assistant' && 'pii_detection' in message && message.pii_detection && 
+              renderPIINotice(message.pii_detection)
+            }
+            
             <ReactMarkdown
               rehypePlugins={[rehypeSanitize]}
               className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0"
             >
               {message.content}
             </ReactMarkdown>
+            
+            {renderSearchSources()}
             
             {renderCitations()}
             
