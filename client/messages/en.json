@@ -4,17 +4,17 @@
     "languageSwitch": "Language"
   },
   "hero": {
-    "title": "MSK Assistant",
+    "title": "Care Companion",
     "subtitle": "Get personalized support for your cancer care journey. Our AI assistant can help you navigate scheduling, resources, and more.",
     "watchVideo": "Watch introduction video",
     "openChat": "Start Chat"
   },
   "chat": {
     "disclaimer": "This chat provides information only. For medical advice or emergencies, contact your care team or call 911.",
-    "typing": "MSK Assistant is typing...",
+    "typing": "Care Companion is typing...",
     "inputPlaceholder": "Type your message...",
     "send": "Send",
-    "welcome": "Hi there — welcome to MSK Assistant.\n\nNot sure where to start? That's okay — we can figure it out together. I can walk you through screenings, appointments, costs, or finding support. No medical jargon, just simple answers and clear steps so you feel confident about what comes next.\n\nAnd don't worry — we don't keep or use any personal information you share here.",
+    "welcome": "Hi there — welcome to Care Companion.\n\nNot sure where to start? That's okay — we can figure it out together. I can walk you through screenings, appointments, costs, or finding support. No medical jargon, just simple answers and clear steps so you feel confident about what comes next.\n\nAnd don't worry — we don't keep or use any personal information you share here.",
     "chooseLanguage": "Please choose your preferred language to continue:",
     "languageConfirm": "Great! I'll assist you in {language}. How can I help you today?",
     "quickIntents": {

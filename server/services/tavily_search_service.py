@@ -225,21 +225,26 @@ You are helping determine if a user's question would benefit from current web se
 User question: "{message}"
 
 Consider if this question would benefit from:
-- Current/recent information (latest research, news, updates)
-- Real-time data (statistics, rates, current policies)
-- Information that changes frequently
+- Current/recent information (latest research, news, updates, guidelines)
+- Real-time data (statistics, rates, current policies, costs)
+- Information that changes frequently (insurance policies, procedures, locations)
 - Specific factual details that might not be in your training data
 - Current events or recent developments
+- Specific institutional information (MSK policies, services, programs)
+- Any informational query where web sources could provide additional value
 
-Respond with ONLY "YES" if web search would be helpful, or "NO" if your existing knowledge is sufficient.
+Be more liberal in recommending search - it's better to provide current sources than outdated information.
+
+Respond with ONLY "YES" if web search would be helpful, or "NO" if your existing knowledge is completely sufficient.
 
 Examples:
 - "What are the latest cancer research breakthroughs?" → YES
-- "How do I schedule an appointment at MSK?" → NO  
+- "How do I schedule an appointment at MSK?" → YES (current procedures)
 - "What are current survival rates for lung cancer?" → YES
-- "What is chemotherapy?" → NO
+- "What is chemotherapy?" → YES (current protocols and information)
 - "What insurance does MSK accept in 2024?" → YES
-- "How does radiation therapy work?" → NO
+- "How does radiation therapy work?" → YES (current techniques)
+- "I want to learn about cancer screening" → YES (current guidelines)
 
 Response:"""
 

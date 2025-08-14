@@ -6,7 +6,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'MSK Assistant',
+  title: 'Care Companion',
   description: 'Get personalized support for your cancer care journey',
 };
 

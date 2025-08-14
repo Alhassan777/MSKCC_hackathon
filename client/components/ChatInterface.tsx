@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Virtuoso } from 'react-virtuoso';
 import { Send, Menu, Plus, MessageSquare, Globe, Phone, Info, X } from 'lucide-react';
@@ -36,6 +36,8 @@ export function ChatInterface() {
   const [isMobile, setIsMobile] = useState(false);
   const [showPIIBanner, setShowPIIBanner] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
+  const [showQuickIntents, setShowQuickIntents] = useState(true);
+  const [showLanguageOptions, setShowLanguageOptions] = useState(false);
   const virtuosoRef = useRef<any>(null);
 
   // Detect mobile
@@ -186,9 +188,9 @@ export function ChatInterface() {
   // Helper function to get localized welcome message
   const getLocalizedWelcomeMessage = (locale: SupportedLocale) => {
     const welcomeMessages = {
-      en: "Hi there — welcome to MSK Assistant.\n\nNot sure where to start? That's okay — we can figure it out together. I can walk you through screenings, appointments, costs, or finding support. No medical jargon, just simple answers and clear steps so you feel confident about what comes next.\n\nAnd don't worry — we don't keep or use any personal information you share here.",
-      es: "Hola — bienvenido al Asistente MSK.\n\n¿No está seguro por dónde empezar? Está bien — podemos descubrirlo juntos. Puedo guiarle a través de exámenes, citas, costos o encontrar apoyo. Sin jerga médica, solo respuestas simples y pasos claros para que se sienta confiado sobre lo que viene después.\n\nY no se preocupe — no guardamos ni usamos ninguna información personal que comparta aquí.",
-      ar: "مرحباً — أهلاً بك في مساعد MSK.\n\nلست متأكداً من أين تبدأ؟ لا بأس — يمكننا اكتشاف ذلك معاً. يمكنني إرشادك خلال الفحوصات والمواعيد والتكاليف أو إيجاد الدعم. لا مصطلحات طبية معقدة، فقط إجابات بسيطة وخطوات واضحة لتشعر بالثقة حول ما سيأتي بعد ذلك.\n\nولا تقلق — نحن لا نحتفظ أو نستخدم أي معلومات شخصية تشاركها هنا.",
+      en: "Hi there — welcome to Care Companion.\n\nNot sure where to start? That's okay — we can figure it out together. I can walk you through screenings, appointments, costs, or finding support. No medical jargon, just simple answers and clear steps so you feel confident about what comes next.\n\nAnd don't worry — we don't keep or use any personal information you share here.",
+      es: "Hola — bienvenido a Care Companion.\n\n¿No está seguro por dónde empezar? Está bien — podemos descubrirlo juntos. Puedo guiarle a través de exámenes, citas, costos o encontrar apoyo. Sin jerga médica, solo respuestas simples y pasos claros para que se sienta confiado sobre lo que viene después.\n\nY no se preocupe — no guardamos ni usamos ninguna información personal que comparta aquí.",
+      ar: "مرحباً — أهلاً بك في Care Companion.\n\nلست متأكداً من أين تبدأ؟ لا بأس — يمكننا اكتشاف ذلك معاً. يمكنني إرشادك خلال الفحوصات والمواعيد والتكاليف أو إيجاد الدعم. لا مصطلحات طبية معقدة، فقط إجابات بسيطة وخطوات واضحة لتشعر بالثقة حول ما سيأتي بعد ذلك.\n\nولا تقلق — نحن لا نحتفظ أو نستخدم أي معلومات شخصية تشاركها هنا.",
       zh: "您好 — 欢迎使用MSK助手。\n\n不知道从哪里开始？没关系 — 我们可以一起弄清楚。我可以引导您了解筛查、预约、费用或寻找支持。没有医学术语，只有简单的答案和清晰的步骤，让您对接下来的事情充满信心。\n\n不用担心 — 我们不会保存或使用您在这里分享的任何个人信息。",
       pt: "Olá — bem-vindo ao Assistente MSK.\n\nNão tem certeza por onde começar? Tudo bem — podemos descobrir juntos. Posso orientá-lo sobre exames, consultas, custos ou encontrar apoio. Sem jargão médico, apenas respostas simples e passos claros para que você se sinta confiante sobre o que vem a seguir.\n\nE não se preocupe — não guardamos nem usamos nenhuma informação pessoal que você compartilhar aqui."
     };
@@ -335,62 +337,62 @@ export function ChatInterface() {
     }
   };
 
-  const quickIntents = [
+  const quickIntents = useMemo(() => [
     { 
       key: 'getting_started' as IntentKey, 
-      label: 'Getting Started', 
+      label: t('quickIntents.getting_started'), 
       prompt: 'I\'m new to MSK and need to understand how to become a patient. Please explain the process for becoming an MSK patient, including eligibility requirements, how to get referrals, risk assessment options, and what makes MSK different from other cancer centers. I also want to know about MSK\'s "Why Choose MSK" advantages and any initial screening or consultation steps.',
       description: 'Complete guide to becoming an MSK patient - eligibility, referrals, risk assessment, and what sets MSK apart'
     },
     { 
       key: 'screening_prevention' as IntentKey, 
-      label: 'Cancer Screening', 
+      label: t('quickIntents.screening_prevention'), 
       prompt: 'I want to learn about cancer screening and prevention at MSK. Please provide detailed information about MSK\'s screening programs, what types of cancer screenings are available, who qualifies for different screening tests, what to expect during the screening process, risk assessment tools, and MSK\'s approach to cancer prevention. Include information about early detection programs and how MSK\'s screening differs from routine check-ups.',
       description: 'MSK\'s comprehensive cancer screening programs, eligibility, prevention strategies, and early detection'
     },
     { 
       key: 'scheduling_appointments' as IntentKey, 
-      label: 'Appointments', 
+      label: t('quickIntents.scheduling_appointments'), 
       prompt: 'I need help with scheduling at MSK. Please explain all the ways to book appointments (online, phone, through referrals), wait times for new patients, how MSK\'s Care Advisors work (available 24/7), how to reschedule or cancel appointments, coordinating multiple appointments in one visit, and tips for preparing for my first appointment. Include information about MSK\'s concierge support services.',
       description: 'Complete appointment scheduling guide - booking methods, wait times, Care Advisors, and preparation tips'
     },
     { 
       key: 'financial_insurance' as IntentKey, 
-      label: 'Insurance & Costs', 
+      label: t('quickIntents.financial_insurance'), 
       prompt: 'I need comprehensive information about costs and financial assistance at MSK. Please explain MSK\'s Financial Assistance Program, how to get cost estimates for treatments and consultations, what insurance plans MSK accepts, how billing works, options for financial assistance and payment plans, and how to request cost estimates before treatment. Include plain-language explanations of insurance coverage for cancer care.',
       description: 'MSK\'s Financial Assistance Program, insurance coverage, cost estimates, and payment options'
     },
     { 
       key: 'supportive_care' as IntentKey, 
-      label: 'Support Services', 
+      label: t('quickIntents.supportive_care'), 
       prompt: 'I want to know about MSK\'s supportive and holistic care services. Please provide details about emotional and mental health support, counseling services, spiritual care, symptom management and palliative care, MSK\'s Integrative Medicine services (including yoga, music therapy, acupuncture), nutrition and wellness programs, social work services, and family assistance programs. Explain how these services work together with medical treatment.',
       description: 'MSK\'s comprehensive support services - counseling, spiritual care, integrative medicine, and wellness programs'
     },
     { 
       key: 'aya_caregiver' as IntentKey, 
-      label: 'Young Adults & Caregivers', 
+      label: t('quickIntents.aya_caregiver'), 
       prompt: 'I need information about MSK\'s programs for young adults and caregivers. Please explain MSK\'s AYA (Adolescent and Young Adult) program, resources specifically designed for young adults with cancer, caregiver support services, caregiver counseling programs, peer support groups, RLAC (Resource Link for Adolescents and Young Adults with Cancer), bereavement support, and how MSK addresses the unique needs of young adults facing cancer.',
       description: 'MSK\'s specialized AYA program, caregiver support, peer groups, and resources for young adults with cancer'
     },
     { 
       key: 'navigation_logistics' as IntentKey, 
-      label: 'Visit Planning', 
+      label: t('quickIntents.navigation_logistics'), 
       prompt: 'I need help planning my visit to MSK locations. Please provide comprehensive information about getting to MSK facilities, parking options and costs, shuttle services, public transportation access, visitor guidelines and hours, lodging recommendations for out-of-town patients, on-site amenities (cafeteria, pharmacy, gift shop), accessibility services, and tips for navigating MSK campuses. Include information about planning your visit and what to expect.',
       description: 'Complete MSK visit planning - directions, parking, transit, lodging, visitor policies, and campus amenities'
     },
     { 
       key: 'glossary_education' as IntentKey, 
-      label: 'Education & Learning', 
+      label: t('quickIntents.glossary_education'), 
       prompt: 'I want to access MSK\'s educational resources and learn about medical terminology. Please provide information about MSK\'s Patient & Community Education Library, glossary of medical terms explained in plain language, cancer types and treatment terminology, MSK\'s "Cancer Straight Talk" podcast, "Cooking with Karla" videos, educational videos and guides, acronyms and abbreviations used at MSK, and other learning resources available to patients and families.',
       description: 'MSK\'s education library, medical glossary, Cancer Straight Talk podcast, and learning resources'
     },
     { 
       key: 'clinical_trials' as IntentKey, 
-      label: 'Clinical Trials', 
+      label: t('quickIntents.clinical_trials'), 
       prompt: 'I\'m interested in MSK\'s clinical trials and research opportunities. Please explain how clinical trial enrollment works at MSK, what types of trials are available for adult and pediatric cancers, how to find trials that might be appropriate for my situation, MSK\'s leading-edge research studies, the benefits and considerations of participating in clinical trials, and how MSK\'s research contributes to advancing cancer treatment. Include information about MSK\'s hundreds of active clinical trials.',
       description: 'MSK\'s clinical trials program - enrollment process, available studies, and cutting-edge cancer research'
     },
-  ];
+  ], [t]);
 
   const currentLanguageName = languageOptions.find(lang => lang.code === locale)?.nativeName || 'English';
 
@@ -465,7 +467,7 @@ export function ChatInterface() {
               MSK
             </div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg font-semibold text-gray-900">MSK Assistant</h1>
+              <h1 className="text-lg font-semibold text-gray-900">Care Companion</h1>
               <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
                 Info-only
               </span>
@@ -513,24 +515,46 @@ export function ChatInterface() {
           {showWelcomeCard && (
             <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-8 mb-6">
               <div className="text-center">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-3">MSK Assistant</h2>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-3">Care Companion</h2>
                 <p className="text-gray-600 mb-6">Helping you find the right care and resources, while keeping your privacy first.</p>
                 
                 {/* Language Selection */}
                 <div className="mb-6">
-                  <h3 className="text-sm font-medium text-gray-700 mb-3">Choose your language:</h3>
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {languageOptions.map((language) => (
-                      <Button
-                        key={language.code}
-                        variant={language.code === locale ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => handleWelcomeAction('language', language.code)}
-                        className={`${language.code === locale ? 'bg-[#002569] text-white' : ''} focus:ring-2 focus:ring-[#002569] focus:ring-offset-2`}
+                  <div className="text-center mb-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowLanguageOptions(!showLanguageOptions)}
+                      className="px-6 py-3 text-base font-medium border-2 border-[#002569] text-[#002569] bg-white hover:!bg-[#002569] hover:!text-white hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 msk-hover"
+                    >
+                      {showLanguageOptions ? 'Hide Languages' : 'Choose Your Language'}
+                      <svg 
+                        className={`ml-2 h-4 w-4 transition-transform duration-200 ${showLanguageOptions ? 'rotate-180' : ''}`} 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
                       >
-                        {language.nativeName}
-                      </Button>
-                    ))}
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </Button>
+                  </div>
+                  
+                  <div className={`transition-all duration-300 ease-in-out overflow-hidden ${showLanguageOptions ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <div className="flex flex-wrap justify-center gap-3 max-w-lg mx-auto">
+                      {languageOptions.map((language) => (
+                        <Button
+                          key={language.code}
+                          variant={language.code === locale ? 'default' : 'outline'}
+                          size="lg"
+                          onClick={() => handleWelcomeAction('language', language.code)}
+                          className={`${language.code === locale 
+                            ? 'bg-[#002569] text-white hover:!bg-[#143983] border-2 border-[#002569]' 
+                            : 'border-2 border-gray-300 bg-white text-gray-700 hover:!border-[#002569] hover:!text-white hover:!bg-[#002569] msk-hover'
+                          } px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-[#002569] focus:ring-offset-2 transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 min-w-[120px]`}
+                        >
+                          {language.nativeName}
+                        </Button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -538,7 +562,7 @@ export function ChatInterface() {
 
                 <button 
                   onClick={() => setShowWelcomeCard(false)}
-                  className="text-sm text-[#002569] hover:underline"
+                  className="text-sm text-[#002569] hover:text-[#143983] hover:underline transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#002569] focus:ring-offset-2 rounded-md px-2 py-1"
                 >
                   Prefer to type instead?
                 </button>
@@ -591,25 +615,55 @@ export function ChatInterface() {
 
               {/* Quick Intents Row */}
               {!showWelcomeCard && messages.length > 0 && (
-                <div className="px-6 py-2 border-t border-gray-100">
-                  <div className="flex flex-wrap gap-2">
-                    {quickIntents.map((intent) => (
-                      <Tooltip
-                        key={intent.key}
-                        content={intent.description}
-                        side="top"
-                        delayMs={500}
+                <div className="border-t border-gray-100">
+                  {/* Collapse/Expand Header */}
+                  <div className="relative z-5 px-6 py-2 flex items-center justify-between bg-gray-50/50">
+                    <span className="text-sm font-medium text-gray-700">Quick Topics</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowQuickIntents(!showQuickIntents)}
+                      className="h-6 w-6 p-0 hover:bg-gray-200 transition-all duration-200"
+                      aria-label={showQuickIntents ? "Hide quick topics" : "Show quick topics"}
+                    >
+                      <svg 
+                        className={`h-4 w-4 transition-transform duration-200 ${showQuickIntents ? 'rotate-180' : ''}`} 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
                       >
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleQuickIntent(intent.key, intent.prompt)}
-                          className="text-xs border-gray-300 hover:border-[#002569] hover:text-[#002569] focus:ring-2 focus:ring-[#002569] focus:ring-offset-2 transition-all duration-200"
-                        >
-                          {intent.label}
-                        </Button>
-                      </Tooltip>
-                    ))}
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </Button>
+                  </div>
+                  
+                  {/* Collapsible Quick Intents */}
+                  <div className={`relative transition-all duration-300 ease-in-out overflow-visible ${showQuickIntents ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <div className="px-6 py-3">
+                      <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto relative z-10">
+                        {quickIntents.map((intent) => (
+                          <Tooltip
+                            key={intent.key}
+                            content={intent.description}
+                            side="top"
+                            delayMs={300}
+                          >
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleQuickIntent(intent.key, intent.prompt)}
+                              className="relative z-20 text-sm px-4 py-2 border-2 border-gray-300 bg-white text-gray-700 hover:!border-[#002569] hover:!text-white hover:!bg-[#002569] hover:shadow-xl hover:scale-105 active:scale-95 focus:ring-2 focus:ring-[#002569] focus:ring-offset-2 transition-all duration-300 font-medium msk-hover"
+                              style={{
+                                position: 'relative',
+                                zIndex: 30
+                              }}
+                            >
+                              {intent.label}
+                            </Button>
+                          </Tooltip>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -645,31 +699,35 @@ export function ChatInterface() {
               )}
 
               {/* Input Area */}
-              <div className="border-t border-gray-200 bg-white p-4 rounded-b-2xl">
-                <form onSubmit={handleSubmit} className="flex gap-3">
-                  <div className="flex-1 relative">
-                    <Input
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      placeholder="Ask about screening, costs, support…"
-                      disabled={isLoading}
-                      className="pr-12 py-3 text-base border-gray-300 focus:border-[#002569] focus:ring-[#002569] focus:ring-2 focus:ring-offset-2 rounded-xl"
-                      autoComplete="off"
-                      aria-label="Type your message"
-                    />
-                    <Button
-                      type="submit"
-                      variant="ghost"
-                      size="sm"
-                      disabled={isLoading || !input.trim()}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#002569] disabled:opacity-50 focus:ring-2 focus:ring-[#002569] focus:ring-offset-2"
-                      aria-label="Send message"
-                    >
-                      <Send className="h-5 w-5" />
-                    </Button>
+              <div className="border-t border-gray-200 bg-white p-6 rounded-b-2xl">
+                <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
+                  <div className="relative">
+                    <div className="flex items-end gap-3">
+                      <div className="flex-1 relative">
+                        <Input
+                          value={input}
+                          onChange={(e) => setInput(e.target.value)}
+                          placeholder="Ask about screening, appointments, costs, support, or anything else..."
+                          disabled={isLoading}
+                          className="w-full pr-14 py-4 px-4 text-base border-2 border-gray-300 focus:border-[#002569] focus:ring-[#002569] focus:ring-2 focus:ring-offset-1 rounded-xl bg-gray-50 focus:bg-white transition-all duration-200 min-h-[52px] resize-none"
+                          autoComplete="off"
+                          aria-label="Type your message"
+                        />
+                        <Button
+                          type="submit"
+                          variant="ghost"
+                          size="sm"
+                          disabled={isLoading || !input.trim()}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white hover:bg-[#002569] disabled:opacity-50 focus:ring-2 focus:ring-[#002569] focus:ring-offset-2 h-8 w-8 rounded-lg transition-all duration-200"
+                          aria-label="Send message"
+                        >
+                          <Send className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </form>
-                <p className="text-xs text-gray-500 text-center mt-2">
+                <p className="text-xs text-gray-500 text-center mt-3 max-w-2xl mx-auto">
                   MSK Assistant can make mistakes. Please verify important information.
                 </p>
               </div>

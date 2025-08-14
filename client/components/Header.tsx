@@ -13,8 +13,21 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <div className="flex items-center">
-          <div className="flex h-8 w-32 items-center justify-center rounded bg-primary text-white text-sm font-semibold">
-            MSK Logo
+          <div className="h-10 w-10 rounded-lg overflow-hidden bg-white border border-gray-200 shadow-sm">
+            <img 
+              src="/assets/iPfhoTo7_400x400.webp" 
+              alt="Care Companion Logo" 
+              className="h-full w-full object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                target.parentElement!.innerHTML = '<div class="h-full w-full bg-[#002569] flex items-center justify-center text-white text-xs font-bold">CC</div>';
+              }}
+            />
+          </div>
+          <div className="ml-3">
+            <h1 className="text-lg font-semibold text-gray-900">Care Companion</h1>
+            <p className="text-xs text-gray-500">Healthcare Assistant</p>
           </div>
         </div>
 

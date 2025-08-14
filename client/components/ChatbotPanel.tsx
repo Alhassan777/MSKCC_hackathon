@@ -222,7 +222,7 @@ export function ChatbotPanel({ isOpen = true }: ChatbotPanelProps) {
           {/* Header */}
           <div className="border-b p-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">MSK Assistant</h2>
+              <h2 className="text-lg font-semibold">Care Companion</h2>
               <LanguageSwitcher variant="header" />
             </div>
           </div>

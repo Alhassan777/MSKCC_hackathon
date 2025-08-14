@@ -312,19 +312,8 @@ def _parse_response_enhancements(message: str, language: str) -> tuple[List[Acti
             href="https://mskcc.org/aya-program"
         ))
     
-    # Add a citation for MSK AYA program
-    citation_titles = {
-        "en": "MSK Young Adult Program",
-        "es": "Programa de Adultos Jóvenes MSK",
-        "ar": "برنامج البالغين الشباب في MSK",
-        "zh": "MSK青年成人项目",
-        "pt": "Programa de Jovens Adultos MSK"
-    }
-    
-    citations.append(Citation(
-        title=citation_titles.get(language, citation_titles["en"]),
-        url="https://mskcc.org/aya-program"
-    ))
+    # Citations will now come from search results or be contextually relevant
+    # No hardcoded citations added to every response
     
     return actions, citations
 

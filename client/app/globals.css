@@ -124,12 +124,17 @@ a:focus-visible {
 .btn-primary {
   background-color: var(--color-primary-600);
   color: white;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-primary:hover {
   background-color: var(--color-primary-500);
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 25px -5px rgba(0, 37, 105, 0.25), 0 8px 10px -6px rgba(0, 37, 105, 0.1);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
 }
 
 /* Clean input focus styles */
@@ -209,6 +214,230 @@ input:focus, textarea:focus {
 
 .animate-slide-in {
   animation: slideIn 0.3s ease-out;
+}
+
+/* Enhanced hover effects for interactive elements */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+.hover-lift:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Improved button hover states */
+.btn-outline:hover {
+  border-color: var(--color-primary-600);
+  background-color: rgba(0, 37, 105, 0.05);
+  color: var(--color-primary-600);
+}
+
+/* Smooth focus transitions */
+*:focus-visible {
+  transition: outline 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Enhanced collapsible animations */
+.collapsible-content {
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: visible !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Improved text input styles */
+.enhanced-input {
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.enhanced-input:focus {
+  background: #ffffff;
+  border-color: #002569;
+  box-shadow: 0 0 0 3px rgba(0, 37, 105, 0.1), 
+              0 4px 12px -2px rgba(0, 37, 105, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Better button hover states for readability */
+.readable-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.readable-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.readable-hover:hover::before {
+  left: 100%;
+}
+
+/* High contrast hover effects */
+.btn-high-contrast:hover {
+  background-color: #002569 !important;
+  color: white !important;
+  border-color: #002569 !important;
+  box-shadow: 0 8px 25px -5px rgba(0, 37, 105, 0.4),
+              0 0 0 1px rgba(0, 37, 105, 0.1);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Force hover effects for MSK buttons */
+.msk-hover:hover {
+  background-color: #002569 !important;
+  color: white !important;
+  border-color: #002569 !important;
+  box-shadow: 0 4px 12px rgba(0, 37, 105, 0.3) !important;
+}
+
+/* Ensure outline buttons override properly */
+button[class*="outline"]:hover {
+  background-color: #002569 !important;
+  color: white !important;
+  border-color: #002569 !important;
+}
+
+/* Force MSK hover effects on all buttons with msk-hover class */
+.msk-hover:hover,
+.msk-hover:hover * {
+  background-color: #002569 !important;
+  color: white !important;
+  border-color: #002569 !important;
+}
+
+/* Override Tailwind and component library styles completely */
+button.msk-hover:hover {
+  background: #002569 !important;
+  background-color: #002569 !important;
+  color: white !important;
+  border: 2px solid #002569 !important;
+  border-color: #002569 !important;
+}
+
+/* Target specific button variants */
+[data-variant="outline"].msk-hover:hover,
+.bg-background.msk-hover:hover,
+.border-input.msk-hover:hover {
+  background: #002569 !important;
+  background-color: #002569 !important;
+  color: white !important;
+  border-color: #002569 !important;
+}
+
+/* Ultra-specific targeting for Tailwind classes */
+.bg-white.msk-hover:hover,
+.border-gray-300.msk-hover:hover,
+.text-gray-700.msk-hover:hover,
+button.border-gray-300.msk-hover:hover {
+  background: #002569 !important;
+  background-color: #002569 !important;
+  color: white !important;
+  border-color: #002569 !important;
+  border: 2px solid #002569 !important;
+}
+
+/* Force override all possible combinations */
+.msk-hover.bg-white:hover,
+.msk-hover.border-gray-300:hover,
+.msk-hover.text-gray-700:hover {
+  background: #002569 !important;
+  background-color: #002569 !important;
+  color: white !important;
+  border-color: #002569 !important;
+}
+
+/* Ensure hover effects aren't hidden by parent containers */
+.msk-hover:hover {
+  position: relative !important;
+  z-index: 999 !important;
+  background: #002569 !important;
+  background-color: #002569 !important;
+  color: white !important;
+  border-color: #002569 !important;
+  border: 2px solid #002569 !important;
+}
+
+/* Fix collapsible container interference */
+.collapsible-content {
+  overflow: visible !important;
+}
+
+.collapsible-content button:hover {
+  position: relative !important;
+  z-index: 999 !important;
+}
+
+/* Specific fix for collapsed sections hiding hover effects */
+[class*="max-h-"] button.msk-hover:hover,
+[class*="overflow-"] button.msk-hover:hover,
+.border-t button.msk-hover:hover {
+  position: relative !important;
+  z-index: 1000 !important;
+  background: #002569 !important;
+  background-color: #002569 !important;
+  color: white !important;
+  border: 2px solid #002569 !important;
+  border-color: #002569 !important;
+  box-shadow: 0 8px 25px -5px rgba(0, 37, 105, 0.4) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+}
+
+/* Ensure parent containers don't clip hover effects */
+[class*="border-t"],
+[class*="overflow-"],
+[class*="max-h-"] {
+  overflow: visible !important;
+}
+
+/* Smooth collapse animations */
+@keyframes expand {
+  from {
+    max-height: 0;
+    opacity: 0;
+    transform: scaleY(0.8);
+  }
+  to {
+    max-height: 500px;
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes collapse {
+  from {
+    max-height: 500px;
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+    transform: scaleY(0.8);
+  }
+}
+
+.animate-expand {
+  animation: expand 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-collapse {
+  animation: collapse 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 /* Typography improvements */

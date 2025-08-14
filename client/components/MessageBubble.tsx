@@ -99,28 +99,50 @@ export function MessageBubble({ message, showTimestamp = false }: MessageBubbleP
           </div>
           <span className="text-sm font-medium text-blue-800">Sources from web search:</span>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-4">
           {message.search_sources.map((source, index) => (
-            <div key={index} className="bg-white p-2 rounded border border-blue-100">
+            <div key={index} className="group">
               <a
                 href={source.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block hover:bg-blue-25 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded transition-colors"
+                className="block bg-white p-5 rounded-xl border border-blue-100 hover:border-blue-300 hover:shadow-lg focus:outline-none focus:ring-3 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 ease-in-out transform hover:-translate-y-1"
+                aria-label={`Read more about ${source.title} on ${new URL(source.url).hostname}`}
               >
-                <div className="flex items-start justify-between gap-2">
+                <div className="flex items-start gap-4">
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-blue-900 hover:text-blue-700 line-clamp-1">
-                      {source.title}
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <h4 className="text-base font-semibold text-blue-900 group-hover:text-blue-700 transition-colors duration-200 leading-snug line-clamp-2">
+                        {source.title}
+                      </h4>
+                      <div className="flex-shrink-0">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-50 to-blue-100 group-hover:from-blue-100 group-hover:to-blue-200 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md">
+                          <ExternalLink className="h-5 w-5 text-blue-600 group-hover:text-blue-700 transition-colors duration-200" />
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-xs text-gray-600 mt-1 line-clamp-2">
+                    
+                    <p className="text-sm text-gray-700 mb-4 leading-relaxed line-clamp-3">
                       {source.snippet}
-                    </div>
-                    <div className="text-xs text-blue-600 mt-1 truncate">
-                      {new URL(source.url).hostname}
+                    </p>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 group-hover:bg-blue-100 px-3 py-1.5 rounded-full transition-colors duration-200">
+                          <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
+                          {new URL(source.url).hostname}
+                        </div>
+                        {source.score && (
+                          <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
+                            {Math.round(source.score * 100)}% match
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-xs text-gray-400 group-hover:text-gray-600 transition-colors duration-200">
+                        Click to read more →
+                      </div>
                     </div>
                   </div>
-                  <ExternalLink className="h-3 w-3 text-blue-500 flex-shrink-0 mt-1" />
                 </div>
               </a>
             </div>
@@ -178,8 +200,12 @@ export function MessageBubble({ message, showTimestamp = false }: MessageBubbleP
     <div className="flex justify-start mb-3 group">
       <div className="flex items-start gap-3 max-w-[72ch]">
         {/* Avatar */}
-        <div className="w-8 h-8 rounded-full bg-[#002569] flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 mt-1">
-          MSK
+        <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 mt-1 bg-white border border-gray-200">
+          <img 
+            src="/assets/iPfhoTo7_400x400.webp" 
+            alt="Care Companion" 
+            className="w-full h-full object-cover"
+          />
         </div>
         
         {/* Message Content */}
