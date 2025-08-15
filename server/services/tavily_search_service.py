@@ -218,13 +218,22 @@ Search query:"""
             return any(trigger in message.lower() for trigger in simple_triggers)
         
         try:
-            # Use LLM to determine if search is needed
+            # Use LLM to determine if search is needed AND check for medical diagnosis requests
             search_decision_prompt = f"""
 You are helping determine if a user's question would benefit from current web search results.
 
 User question: "{message}"
 
-Consider if this question would benefit from:
+FIRST, determine if this is asking for a medical diagnosis:
+Check if the user is:
+- Describing symptoms and asking "what is my diagnosis?" or "what do I have?"
+- Asking "could this be [disease]?" about their specific symptoms
+- Requesting diagnosis based on symptoms they're experiencing
+- Asking for medical evaluation of their personal symptoms
+
+If the question IS asking for medical diagnosis, respond with: "MEDICAL_DIAGNOSIS_REQUEST"
+
+If NOT asking for medical diagnosis, consider if this question would benefit from:
 - Current/recent information (latest research, news, updates, guidelines)
 - Real-time data (statistics, rates, current policies, costs)
 - Information that changes frequently (insurance policies, procedures, locations)
@@ -235,16 +244,17 @@ Consider if this question would benefit from:
 
 Be more liberal in recommending search - it's better to provide current sources than outdated information.
 
-Respond with ONLY "YES" if web search would be helpful, or "NO" if your existing knowledge is completely sufficient.
+Respond with ONLY:
+- "MEDICAL_DIAGNOSIS_REQUEST" if asking for medical diagnosis
+- "YES" if web search would be helpful
+- "NO" if your existing knowledge is completely sufficient
 
 Examples:
+- "I have fever and pain, what is my diagnosis?" → MEDICAL_DIAGNOSIS_REQUEST
 - "What are the latest cancer research breakthroughs?" → YES
 - "How do I schedule an appointment at MSK?" → YES (current procedures)
 - "What are current survival rates for lung cancer?" → YES
 - "What is chemotherapy?" → YES (current protocols and information)
-- "What insurance does MSK accept in 2024?" → YES
-- "How does radiation therapy work?" → YES (current techniques)
-- "I want to learn about cancer screening" → YES (current guidelines)
 
 Response:"""
 
@@ -258,9 +268,18 @@ Response:"""
             )
             
             decision = response.get("content", "").strip().upper()
+            
+            # Check if this is a medical diagnosis request
+            is_medical_diagnosis = "MEDICAL_DIAGNOSIS_REQUEST" in decision
             should_search = decision == "YES"
             
+            logger.info(f"THIS QUESTION IS ASKING FOR A MEDICAL DIAGNOSIS -> {is_medical_diagnosis}")
             logger.info(f"LLM search decision for '{message[:50]}...': {decision} -> {should_search}")
+            
+            # If it's a medical diagnosis request, don't trigger search
+            if is_medical_diagnosis:
+                return False
+                
             return should_search
             
         except Exception as e:
